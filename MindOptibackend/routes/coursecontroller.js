@@ -27,7 +27,7 @@ const getcourses = async(req,res) => {
         }else{
         pool.query("INSERT INTO Module (ModName,Descrip,sdate,enddate,adminid,modcode) values ($1,$2,$3,$4,$5,$6)",[modname,descrip,star,end,adminid,modcode],(error,results)=>{
             if (error) throw  error;
-            res.status(200).send("added student");
+            res.status(200).send("added course");
         
         });
       }
