@@ -7,6 +7,7 @@ const courseroutes = require("./models/course");
 
 app.get("/",(req,res) =>{
     res.send("hello");
+    console.log("server");
 });
 
 
@@ -16,7 +17,7 @@ app.use("/coursedetails",courseroutes);
 
 
 app.listen(8070, () => {
-    console.log("server is in port 8070")
+    console.log("server is in port 8070");
 });
 
 //http://localhost:3000/coursepage
