@@ -4,6 +4,7 @@ const cors = require ("cors");
 const app = express(); 
 const pool = require("./db");
 const courseroutes = require("./models/course");
+const chatroutes = require("./models/chat");
 
 app.get("/",(req,res) =>{
     res.send("hello");
@@ -16,11 +17,12 @@ app.use("/coursedetails",courseroutes);
 
 
 
+
 app.listen(8070, () => {
     console.log("server is in port 8070");
 });
 
-//http://localhost:3000/coursepage
+//http://localhost:3000/chat
 
 
 
