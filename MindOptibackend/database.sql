@@ -217,6 +217,19 @@ CREATE DARABASE LMS;
    foreign key(StudentID) references Student(StudentID));
 
    ---------------------------------------
+   CREATE TABLE teacherrequests 
+   (
+     tid VARCHAR(10),
+							  modid SERIAL,
+							  requesttime timestamp,
+							  acceptby VARCHAR(10),
+							  acceptstatus boolean,
+							  PRIMARY KEY(tid,modid),
+							  foreign key(tid) references Teacher(TeacherID),
+							 foreign key(acceptby) references Admin_(adminid),
+		 foreign key(modid) references Module(ModID));
+
+   ---------------------------------------
    create table Type_
    (
    typeID SERIAL,
