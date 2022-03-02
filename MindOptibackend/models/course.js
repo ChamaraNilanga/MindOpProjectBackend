@@ -12,10 +12,13 @@ app.use((req,res,next)=>{
 
 router.get("/", controller.getcourses);
 router.post("/", controller.addCourse);
+router.get("/teacherreqlist/",controller1.getteacherrequestlist);
 router.get("/:key",controller.searchedcourses);
 router.delete("/:id",controller.deleteCourse);
 router.put("/:id",controller.updateCourse);
 router.get("/studentenroll/:sid",controller1.getcoursesstudentrequorenr);
+router.post("/teacherrequest/:tid&:modid",controller1.teacherrequest);
+
 
 
 module.exports=router;

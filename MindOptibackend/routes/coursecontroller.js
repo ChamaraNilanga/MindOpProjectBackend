@@ -4,14 +4,14 @@ const pool = require("../db");
 const getcourses = async(req,res) => {
     await pool.query("SELECT * FROM Module",(error,results)=>{
         if (error) throw  error;
-        res.send(results.rows);
+        res.status(200).json(results.rows);
     });
 };
 
 //get searched course
  const searchedcourses = async(req,res) => {
      const key= req.params.key;
-     pool.query("SELECT * FROM Module WHERE ModName LIKE '%' || $1 || '%'",[key],(error,results)=>{
+      await pool.query("SELECT * FROM Module WHERE ModName LIKE '%' || $1 || '%'",[key],(error,results)=>{
          if (error) throw  error;
          res.status(200).json(results.rows);
      });
@@ -21,7 +21,7 @@ const getcourses = async(req,res) => {
  const addCourse = async(req,res) => {
      const { modname,descrip,star,end,adminid,modcode } =req.body;
      //check already added
-     pool.query("SELECT ModName FROM Module WHERE ModName=$1 OR ModCode=$2",[modname,modcode],(error,results)=>{
+     await pool.query("SELECT ModName FROM Module WHERE ModName=$1 OR ModCode=$2",[modname,modcode],(error,results)=>{
         if (results.rows.length){
             res.send("Already added");
         }else{
@@ -35,9 +35,10 @@ const getcourses = async(req,res) => {
 
  };
 
+//delete course
  const deleteCourse= async(req,res) => {
     const id=req.params.id;
-    pool.query("SELECT modcode FROM Module WHERE modcode=$1 ",[id],(error,results)=>{
+    await pool.query("SELECT modcode FROM Module WHERE modcode=$1 ",[id],(error,results)=>{
         if (!results.rows.length){
             res.send("No any course relevent to that code");
         }else{
@@ -51,10 +52,12 @@ const getcourses = async(req,res) => {
 
  };
 
+
+//update course
  const updateCourse=async(req,res)=>{
      const id=req.params.id;
      const { descrip,start,end }=req.body;
-     pool.query("SELECT modcode FROM Module WHERE modcode=$1 ",[id],(error,results)=>{
+     await pool.query("SELECT modcode FROM Module WHERE modcode=$1 ",[id],(error,results)=>{
         if (!results.rows.length){
             res.send("No any course relevent to that code");
         }else{
