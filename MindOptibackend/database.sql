@@ -178,7 +178,7 @@ CREATE DARABASE LMS;
    CreatedTime timestamp,
    ModCode varchar(10),
    primary key(ModID),
-   foreign key(TeacherID) references Teacher(TeacherID),
+   foreign key(TeacherID) references Teacher(TeacherID) ,
    foreign key(AdminID) references Admin_(AdminID));
 
    ------------------------------------
