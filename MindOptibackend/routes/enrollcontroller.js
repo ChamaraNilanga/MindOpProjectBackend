@@ -18,7 +18,7 @@ const teacherrequest = async(req,res) => {
         if(!results.rows.length){
             pool.query("SELECT teacherid FROM teacher WHERE teacherid=$1",[tid],(error,results) => {
                 if (results.rows.length){
-                    pool.query("SELECT ModID FROM Module WHERE ModID=$1 AND teacherid IS NULL",[modid],(error,results) => {
+                    pool.query("SELECT ModID FROM Module WHERE ModID=$1 AND isconducting IS NULL",[modid],(error,results) => {
                         if (results.rows.length){
                             pool.query("INSERT INTO teacherrequests (tid,modid,requesttime,acceptstatus) values ($1,$2,CURRENT_TIMESTAMP,'0')",[tid,modid],(error,results)=>{
                                 if (error) throw error;
@@ -64,7 +64,7 @@ const acceptteacherrequest = async(req,res) => {
         if(results.rows.length){
             pool.query("UPDATE teacherrequests SET acceptby=$1,acceptstatus=true WHERE modid=$2 AND tid=$3",[admin,modid,tid],(error,results)=>{
                 if(error) throw error;
-                pool.query("UPDATE Module SET teacherid=$1 WHERE modid=$2",[tid,modid],(error,results)=>{
+                pool.query("UPDATE Module SET isconducting=true WHERE modid=$1",[modid],(error,results)=>{
                     if(error) throw error;
                     res.status(200).send("Accepted request");
                 });
@@ -84,7 +84,7 @@ const removeteacher= async(req,res) => {
         if (!results.rows.length){
             res.send("No any teacher from that id");
         }else{
-            pool.query("UPDATE Module SET teacherid='null' WHERE modid=$1",[modid],(error,results)=>{
+            pool.query("UPDATE Module SET isconducting=null WHERE modid=$1",[modid],(error,results)=>{
                 if(error)throw error;
                 res.status(201).send("Teacher Removed");
             });
@@ -92,7 +92,7 @@ const removeteacher= async(req,res) => {
 
     });
 
- };
+ };//has problem delete foreighn key
 
 
 module.exports = {
