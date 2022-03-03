@@ -55,9 +55,50 @@ const getteacherrequestlist = async(req,res) => {
     });
 };
 
+//accept teacher to conduct
+const acceptteacherrequest = async(req,res) => {
+    const admin = req.params.admin;
+    const tid = req.params.tid;
+    const modid = req.params.modid;
+    await pool.query("SELECT tid FROM teacherrequests WHERE tid=$1 AND modid=$2",[tid,modid],(error,results)=>{
+        if(results.rows.length){
+            pool.query("UPDATE teacherrequests SET acceptby=$1,acceptstatus=true WHERE modid=$2 AND tid=$3",[admin,modid,tid],(error,results)=>{
+                if(error) throw error;
+                pool.query("UPDATE Module SET teacherid=$1 WHERE modid=$2",[tid,modid],(error,results)=>{
+                    if(error) throw error;
+                    res.status(200).send("Accepted request");
+                });
+            });
+        }else{
+            res.status(400).send("Cannot find request");
+        }
+    });
+
+};
+
+//remove teacher from conducting module
+const removeteacher= async(req,res) => {
+    const tid=req.params.tid;
+    const modid=req.params.modid;
+    await pool.query("SELECT teacherid FROM teacher WHERE teacherid=$1 ",[tid],(error,results)=>{
+        if (!results.rows.length){
+            res.send("No any teacher from that id");
+        }else{
+            pool.query("UPDATE Module SET teacherid='null' WHERE modid=$1",[modid],(error,results)=>{
+                if(error)throw error;
+                res.status(201).send("Teacher Removed");
+            });
+        }
+
+    });
+
+ };
+
 
 module.exports = {
     getcoursesstudentrequorenr,
     teacherrequest,
     getteacherrequestlist,
+    acceptteacherrequest,
+    removeteacher,
 };
