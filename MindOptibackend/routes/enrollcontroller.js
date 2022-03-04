@@ -92,7 +92,63 @@ const removeteacher= async(req,res) => {
 
     });
 
- };//has problem delete foreighn key
+ };//has problem delete foreighn key solved by adding is conducting
+
+ //student req to enroll for course
+const studentenrollrequest = async (req,res)=>{
+    const sid = req.params.sid;
+    const modid = req.params.modid;
+    //const {tid,modid}=req.body;if you use body use this with change of course.js router removing :tid&:modid
+    await pool.query("SELECT studentid FROM enrollmentrequest WHERE studentid=$1 AND moduleid=$2",[sid,modid],(error,results) =>{
+        if(!results.rows.length){
+            pool.query("SELECT studentid FROM student WHERE studentid=$1",[sid],(error,results) => {
+                if (results.rows.length){
+                    pool.query("SELECT ModID FROM Module WHERE ModID=$1 AND isconducting IS NOT NULL",[modid],(error,results) => {
+                        if (results.rows.length){
+                            pool.query("INSERT INTO enrollmentrequest (moduleid,studentid,requestedtime) values ($1,$2,CURRENT_TIMESTAMP)",[modid,sid],(error,results)=>{
+                                if (error) throw error;
+                                res.status(201).send("Requested to enroll");
+                            });
+                    }else{
+                        if (error) throw error;
+                        res.status(401).send("Not founded the Course");
+                    }
+    
+                    });
+                }else{
+                    if (error) throw error;
+                    res.status(401).send("You are not a student");
+                }
+            
+            });
+
+        }else{
+            if (error) throw error;
+            res.status(401).send("Already Requested");
+        }
+        
+
+    });
+
+};
+
+//accept student enrollment rrequest
+const acceptstudentrequest = async (req,res) => {
+    const acceptid = req.params.accid;
+    const sid = req.params.sid;
+    const modid = req.params.modid;
+    await pool.query("SELECT studentid FROM enrollmentrequest WHERE studentid=$1 AND moduleid=$2",[sid,modid],(error,results)=>{
+        if(results.rows.length){
+            pool.query("UPDATE enrollmentrequest SET acceptid=$1,accepttime=CURRENT_TIMESTAMP,isaccepted=true WHERE moduleid=$2 AND studentid=$3",[acceptid,modid,sid],(error,results)=>{
+                if(error) throw error;
+                res.status(200).send("Accepted request to enroll");
+               
+            });
+        }else{
+            res.status(400).send("Cannot find request");
+        }
+    });
+};
 
 
 module.exports = {
@@ -101,4 +157,6 @@ module.exports = {
     getteacherrequestlist,
     acceptteacherrequest,
     removeteacher,
+    studentenrollrequest,
+    acceptstudentrequest,
 };
