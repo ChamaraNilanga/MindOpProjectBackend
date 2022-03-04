@@ -211,6 +211,7 @@ CREATE DARABASE LMS;
    StudentID  varchar(10),
    RequestedTime timestamp,
    Progress float,
+   isaccepted boolean,
    primary key(requestedID),
    foreign key(TeacherID) references Teacher(TeacherID),
    foreign key(ModuleID) references Module(ModID),
