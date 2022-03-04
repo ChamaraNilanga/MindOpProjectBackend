@@ -205,7 +205,7 @@ CREATE DARABASE LMS;
    create table EnrollmentRequest
    (
    requestedID SERIAL,
-   TeacherID varchar(10),
+   acceptid varchar(10),
    acceptTime  timestamp,
    ModuleID  SERIAL,
    StudentID  varchar(10),
