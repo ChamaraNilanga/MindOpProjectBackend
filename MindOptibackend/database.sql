@@ -179,6 +179,7 @@ CREATE DARABASE LMS;
    ModCode varchar(10),
    isconducting boolean,
    primary key(ModID),
+   foreign key(TeacherID) references Teacher(TeacherID) ,
    foreign key(AdminID) references Admin_(AdminID));
 
    ------------------------------------
@@ -205,7 +206,7 @@ CREATE DARABASE LMS;
    create table EnrollmentRequest
    (
    requestedID SERIAL,
-   TeacherID varchar(10),
+   acceptid varchar(10),
    acceptTime  timestamp,
    ModuleID  SERIAL,
    StudentID  varchar(10),
