@@ -177,6 +177,7 @@ CREATE DARABASE LMS;
    AdminID varchar(10),
    CreatedTime timestamp,
    ModCode varchar(10),
+   isconducting boolean,
    primary key(ModID),
    foreign key(TeacherID) references Teacher(TeacherID) ,
    foreign key(AdminID) references Admin_(AdminID));
@@ -211,10 +212,24 @@ CREATE DARABASE LMS;
    StudentID  varchar(10),
    RequestedTime timestamp,
    Progress float,
+   isaccepted boolean,
    primary key(requestedID),
    foreign key(TeacherID) references Teacher(TeacherID),
    foreign key(ModuleID) references Module(ModID),
    foreign key(StudentID) references Student(StudentID));
+
+   ---------------------------------------
+   CREATE TABLE teacherrequests 
+   (
+     tid VARCHAR(10),
+							  modid SERIAL,
+							  requesttime timestamp,
+							  acceptby VARCHAR(10),
+							  acceptstatus boolean,
+							  PRIMARY KEY(tid,modid),
+							  foreign key(tid) references Teacher(TeacherID),
+							 foreign key(acceptby) references Admin_(adminid),
+		 foreign key(modid) references Module(ModID));
 
    ---------------------------------------
    create table Type_
