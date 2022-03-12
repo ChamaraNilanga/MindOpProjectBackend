@@ -82,14 +82,7 @@ CREATE DARABASE LMS;
    foreign key(UserID) references User_(UserID));
 
    ------------------------------
-   create table Message_
-   (
-   MessageId SERIAL,
-   MessageBody varchar(500),
-   sender varchar(10),
-   primary key(MessageId));
-
-   ------------------------------
+ 
    create table Qualification
    (
    UserID varchar(10),
@@ -192,17 +185,28 @@ CREATE DARABASE LMS;
    foreign key(ModuleID) references Module(ModID));
 
    --------------------------------------
-   create table chat
+     create table chat
    (
-   StudentID varchar(10),
-   TeacherID varchar(10),
+   Senderid varchar(10),
+   Receiverid varchar(10),
    ChatTime  timestamp,
    MessageId  SERIAL,
-   primary key(StudentID,TeacherID),
-   foreign key(MessageId) references Message_(MessageId),
-   foreign key(TeacherID) references Teacher(TeacherID));
-
+   primary key(Senderid,Receiverid,MessageId),
+   foreign key(MessageId) references Message_(MessageId)
+  )
    --------------------------------------
+
+
+   create table Message_
+   (
+   MessageId SERIAL,
+   MessageBody varchar(500),
+   sender varchar(10),
+   primary key(MessageId)),
+
+
+   ------------------------------
+ 
    create table EnrollmentRequest
    (
    requestedID SERIAL,

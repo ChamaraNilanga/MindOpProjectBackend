@@ -12,7 +12,7 @@ app.use((req,res,next)=>{
 });
 
 
-router.post("/", controller.sendMessage);
+router.post("/:sid&:rid", controller.sendMessage);
 router.delete("/:id",controller.deleteMsg);
 
 
