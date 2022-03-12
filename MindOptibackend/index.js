@@ -5,7 +5,7 @@ const app = express();
 const pool = require("./db");
 const courseroutes = require("./models/course");
 const chatroutes = require("./models/chat");
-
+const userroutes = require("./models/user");
 app.get("/",(req,res) =>{
     res.send("hello");
     console.log("server");
@@ -14,7 +14,7 @@ app.get("/",(req,res) =>{
 
 app.use(express.json());
 app.use("/coursedetails",courseroutes);
-
+app.use("/userdetails",userroutes);
 
 
 
