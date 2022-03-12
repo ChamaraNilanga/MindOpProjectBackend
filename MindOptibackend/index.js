@@ -14,6 +14,7 @@ app.get("/",(req,res) =>{
 
 app.use(express.json());
 app.use("/coursedetails",courseroutes);
+app.use("/message",chatroutes);
 
 
 
