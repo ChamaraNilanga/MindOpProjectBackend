@@ -20,6 +20,7 @@ router.put("/studentreqaccept/:accid&:sid&:modid",controller1.acceptstudentreque
 router.delete("/:id",controller.deleteCourse);
 router.delete("/teacherrequest/:tid&:modid",controller1.removeteacher);
 router.put("/:id",controller.updateCourse);
+router.get("/studentsincourse/:modid",controller.studentincourse);
 router.put("/studentprogress/:sid&:modid",controller.updateprogress);
 router.get("/studentenroll/:sid",controller1.getcoursesstudentrequorenr);
 router.post("/teacherrequest/:tid&:modid",controller1.teacherrequest);

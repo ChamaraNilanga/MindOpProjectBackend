@@ -97,6 +97,21 @@ const getcourses = async(req,res) => {
      });
  };
 
+ //student in one course
+ const studentincourse=async(req,res)=>{
+     const modid=req.params.modid;
+     await pool.query("SELECT modid FROM module WHERE modid=$1",[modid],(error,results)=>{
+         if(results.rows.length){
+             pool.query("SELECT e.studentid,e.progress,u.username,u.email FROM user_ u,enrollmentrequest e WHERE e.studentid=u.userid AND e.moduleid=$1 AND e.isaccepted=true",[modid],(error,results)=>{
+                 if(error) throw error;
+                 res.status(200).json(results.rows);
+             });
+         }else{
+            res.status(400).send("Module cannot find");
+         }
+     });
+
+ };
 
 
 module.exports = {
@@ -107,5 +122,6 @@ module.exports = {
     updateCourse,
     studentfinishedcourses,
     updateprogress,
+    studentincourse,
     
 };
