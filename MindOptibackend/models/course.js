@@ -12,6 +12,7 @@ app.use((req,res,next)=>{
 
 router.get("/", controller.getcourses);
 router.post("/", controller.addCourse);
+router.get("/enroll/:id",controller.conductorenrollcourse);
 router.get("/teacherreqlist/",controller1.getteacherrequestlist);
 router.get("/:key",controller.searchedcourses);
 router.get("/completedcourses/:sid",controller.studentfinishedcourses);

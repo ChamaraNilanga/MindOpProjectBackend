@@ -113,6 +113,34 @@ const getcourses = async(req,res) => {
 
  };
 
+ //get conducting or enrolled courses
+const conductorenrollcourse = async(req,res) => {
+    const id=req.params.id;
+    await pool.query("SELECT studentid FROM student WHERE studentid=$1",[id],(error,results)=>{
+        if(results.rows.length){
+            pool.query("SELECT e.progress,m.modname,m.descrip,u.username,m.modcode FROM module m,enrollmentrequest e,user_ u,teacherrequests t WHERE t.tid=u.userid AND e.moduleid=m.modid AND e.moduleid=t.modid AND e.studentid=$1 AND e.isaccepted=true",[id],(error,results)=>{
+                if(error) throw error;
+                res.status(200).json(results.rows);
+            });
+        }else{
+            pool.query("SELECT teacherid FROM teacher WHERE teacherid=$1",[id],(error,results)=>{
+                if(results.rows.length){
+                    pool.query("SELECT m.modname,m.descrip,m.modcode FROM module m,teacherrequests t WHERE t.acceptstatus=true AND t.modid=m.modid AND t.tid=$1 AND isconducting=true",[id],(error,results)=>{
+                        if(error) throw error;
+                        res.status(200).json(results.rows);
+                    });
+                }else{
+                    res.status(400).send("No user enrolled or conducting courses");
+                }
+            });
+        
+
+        }
+    });
+
+};
+
+
 
 module.exports = {
     getcourses,
@@ -123,5 +151,6 @@ module.exports = {
     studentfinishedcourses,
     updateprogress,
     studentincourse,
+    conductorenrollcourse,
     
 };
