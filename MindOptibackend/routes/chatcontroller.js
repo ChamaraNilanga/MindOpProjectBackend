@@ -2,42 +2,58 @@ const pool = require("../db");
 
 
 //send message
-const sendMessage = async (req,res)=>{
+const sendMessage =async(req,res)=>{
     const {messageBody} =req.body;
     const sid = req.params.sid;
     const rid = req.params.tid;
-      await pool.query("INSERT INTO message_ (messagebody,sender) values ($1,$2)",[messageBody,sid],),(error,results)=>{
-            if (results.rows.length){
+    await pool.query("INSERT INTO chat (senderid,receiverid,chattime,MessageBody) VALUES ($1,$2,CURRENT_TIMESTAMP,$3)",[sid,rid,messageBody],(error,results)=>{
+        if(error) throw error;
+        res.status(200).send("inserted");
+    });
+};
 
-                 pool.query("SELECT messageid FROM message_ WHERE sender=$1 AND messagebody=$2",[sid,messageBody],(error,results) => {
-                    if (results.rows.length){
-                               const mid= results;
-                               pool.query("INSERT INTO chat (senderid,receiverid,chattime,messageid) values ($1,$2,CURRENT_TIMESTAMP,$3)",[sid,rid,mid],(error,results) => {
-                                   if(error) throw error;
-                                   res.status(200).send("insert message");
-                               });
-                  }  })
 
-                  
-        };
-    }
 
-}  
+
+
+
 
 //delete message
-const deleteMsg= async(req,res) => {
-    const id=req.params.id;
-  
-            pool.query("DELETE FROM Message_ WHERE msgcode=$1 ",[id],(error,results)=>{
-                if(error)throw error;
-                res.status(201).send("Message Deleted");
-            });
-        }
+const deleteMessage= async(req,res) => {
+const id=req.params.id;
+await pool.query("SELECT messageid FROM chat WHERE messageid=$1 ",[id],(error,results)=>{
+    if (!results.rows.length){
+        res.send("There is no any messsage for this id");
+    }else{
+        pool.query("DELETE FROM chat WHERE messageid=$1 ",[id],(error,results)=>{
+            if(error)throw error;
+            res.status(201).send("Message Deleted");
+        });
+    }
 
-   
+});
+
+};
+
+
+
+
+
+// get message
+const getMessage = async(req,res) => {
+const sid=req.params.sid;
+const rid=req.params.rid;
+
+await pool.query("SELECT senderid,receiverid,chattime,MessageBody FROM chat WHERE senderid=$1 AND receiverid=$2 OR senderid=$2 AND receiverid=$1",[sid,rid],(error,results)=>{
+    if (error) throw  error;
+    res.status(200).json(results.rows);
+});
+};
+
 
 module.exports = {
-    sendMessage,
-    deleteMsg
-    
+sendMessage,
+deleteMessage,
+getMessage
+
 };
