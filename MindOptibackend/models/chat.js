@@ -12,8 +12,8 @@ app.use((req,res,next)=>{
 });
 
 
-router.post("/:sid&:tid", controller.sendMessage);
-router.delete("/:id",controller.deleteMessage);
+router.post("/:sid&:rid", controller.sendMessage);
+router.delete("/:cid",controller.deleteMessage);
 router.get("/:sid&:rid",controller.getMessage);
 
 
