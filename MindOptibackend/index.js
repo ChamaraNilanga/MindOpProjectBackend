@@ -5,6 +5,7 @@ const app = express();
 const pool = require("./db");
 const courseroutes = require("./models/course");
 const chatroutes = require("./models/chat");
+const forumroutes=require("./models/forum");
 
 app.get("/",(req,res) =>{
     res.send("hello");
@@ -14,6 +15,7 @@ app.get("/",(req,res) =>{
 
 app.use(express.json());
 app.use("/coursedetails",courseroutes);
+app.use("/forums",forumroutes);
 
 
 
