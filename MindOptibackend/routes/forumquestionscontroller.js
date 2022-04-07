@@ -48,7 +48,8 @@ const createforumquestion=async(req,res)=>{
     const {question}=req.body;
     const file=req.file;
     //console.log(file);
-    const results=await uploadFile(file);
+    if(file){
+    const results=await uploadFile(file);//s3.js function used in here
     //console.log(results);
     //res.send("success");
     if(results){
@@ -61,13 +62,20 @@ const createforumquestion=async(req,res)=>{
     }else{
         res.status(400).send("unable to added question");
     }
+    }else{
+        pool.query("INSERT INTO forum_question (name_,fcategoryid,managetime,userid) VALUES ($1,$2,CURRENT_TIMESTAMP,$3)",[question,catid,uid],(error,results)=>{
+            if(error) throw error;
+            res.status(200).send("added question");
+        
+        });
+    }
     
 };
 
 //get forum questions
 const getquestionlist=async(req,res)=>{
     const catid=req.params.cid;
-    await pool.query("SELECT fquestionid,name_,managetime,userid FROM forum_question WHERE fcategoryid=$1",[catid],(error,results)=>{
+    await pool.query("SELECT fquestionid,name_,managetime,userid,image FROM forum_question WHERE fcategoryid=$1",[catid],(error,results)=>{
         if(results.rows.length){
             res.status(200).json(results.rows);
         }else{
