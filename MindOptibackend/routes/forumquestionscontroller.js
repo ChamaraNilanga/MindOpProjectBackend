@@ -42,26 +42,18 @@ const deletecategory=async(req,res)=>{
 };
 /*in the questions we need to upload delete images so this part should update according to it */
 //create questions
-// const createforumquestion=async(req,res)=>{
-//     const catid=req.params.catid;
-//     const uid=req.params.uid; 
-//     const {question}=req.body;
-//     await pool.query("INSERT INTO forum_question (name_,fcategoryid,managetime,userid) VALUES ($1,$2,CURRENT_TIMESTAMP,$3)",[question,catid,uid],(error,results)=>{
-//         if(error) throw error;
-//         res.status(200).send("added question");
-//     });
-// };
 const createforumquestion=async(req,res)=>{
     const catid=req.params.catid;
     const uid=req.params.uid; 
     const {question}=req.body;
     const file=req.file;
-    console.log(file);
+    //console.log(file);
     const results=await uploadFile(file);
-    console.log(results);
+    //console.log(results);
     //res.send("success");
     if(results){
-        pool.query("INSERT INTO forum_question (name_,fcategoryid,managetime,userid) VALUES ($1,$2,CURRENT_TIMESTAMP,$3)",[question,catid,uid],(error,results)=>{
+        const image=results.Location;
+        pool.query("INSERT INTO forum_question (name_,fcategoryid,managetime,userid,image) VALUES ($1,$2,CURRENT_TIMESTAMP,$3,$4)",[question,catid,uid,image],(error,results)=>{
             if(error) throw error;
             res.status(200).send("added question");
         
