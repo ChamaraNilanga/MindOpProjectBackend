@@ -3,6 +3,7 @@ const bodyParser = require ("body-parser");
 const cors = require ("cors");
 const app = express(); 
 const pool = require("./db");
+require('dotenv').config();
 const courseroutes = require("./models/course");
 const chatroutes = require("./models/chat");
 const forumroutes=require("./models/forum");
