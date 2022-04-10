@@ -15,9 +15,11 @@ Moreover, students will be able to easily access and share the learning material
 
 Therefore, it causes to make students more engaging in their studies. For the team engagement in different aspects of the software development, 
 the whole project has been divided into five basic components,
+
 •	User management and assignment management
 •	Quiz management & progress analytics
 •	payment, notification, blogs, and chat system 
 •	content & file management 
 •	course management and forum management
+
 As a whole, all five modules stated above have got approached by us in both front-end and back-end aspects.
