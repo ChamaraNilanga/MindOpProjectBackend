@@ -71,6 +71,75 @@ const getcourses = async(req,res) => {
 
  };
 
+ //student finish courses list
+ const studentfinishedcourses=async (req,res)=>{
+     const sid=req.params.sid;
+     await pool.query("select modname,modcode,progress FROM Module m,enrollmentrequest e WHERE e.moduleid=m.modid AND e.studentid=$1 AND progress=100",[sid],(error,results)=>{
+        if (error) throw  error;
+        res.status(200).json(results.rows);
+     });
+ };
+
+ //update progress of student
+ const updateprogress =async(req,res)=>{
+     const modid=req.params.modid;
+     const sid=req.params.sid;
+     const {progress}=req.body;
+     await pool.query("SELECT requestedid FROM enrollmentrequest WHERE moduleid=$1 AND studentid=$2 AND isaccepted=true",[modid,sid],(error,results)=>{
+         if(!results.rows.length){
+            res.status(400).send("Not accepted or No any record");
+         }else{
+            pool.query("UPDATE enrollmentrequest SET progress=$1 WHERE moduleid=$2 AND studentid=$3",[progress,modid,sid],(error,results)=>{
+                if (error) throw error;
+                res.status(200).send("Updated Progress");
+            });
+         }
+     });
+ };
+
+ //student in one course
+ const studentincourse=async(req,res)=>{
+     const modid=req.params.modid;
+     await pool.query("SELECT modid FROM module WHERE modid=$1",[modid],(error,results)=>{
+         if(results.rows.length){
+             pool.query("SELECT e.studentid,e.progress,u.username,u.email FROM user_ u,enrollmentrequest e WHERE e.studentid=u.userid AND e.moduleid=$1 AND e.isaccepted=true",[modid],(error,results)=>{
+                 if(error) throw error;
+                 res.status(200).json(results.rows);
+             });
+         }else{
+            res.status(400).send("Module cannot find");
+         }
+     });
+
+ };
+
+ //get conducting or enrolled courses
+const conductorenrollcourse = async(req,res) => {
+    const id=req.params.id;
+    await pool.query("SELECT studentid FROM student WHERE studentid=$1",[id],(error,results)=>{
+        if(results.rows.length){
+            pool.query("SELECT e.progress,m.modname,m.descrip,u.username,m.modcode FROM module m,enrollmentrequest e,user_ u,teacherrequests t WHERE t.tid=u.userid AND e.moduleid=m.modid AND e.moduleid=t.modid AND e.studentid=$1 AND e.isaccepted=true",[id],(error,results)=>{
+                if(error) throw error;
+                res.status(200).json(results.rows);
+            });
+        }else{
+            pool.query("SELECT teacherid FROM teacher WHERE teacherid=$1",[id],(error,results)=>{
+                if(results.rows.length){
+                    pool.query("SELECT m.modname,m.descrip,m.modcode FROM module m,teacherrequests t WHERE t.acceptstatus=true AND t.modid=m.modid AND t.tid=$1 AND isconducting=true",[id],(error,results)=>{
+                        if(error) throw error;
+                        res.status(200).json(results.rows);
+                    });
+                }else{
+                    res.status(400).send("No user enrolled or conducting courses");
+                }
+            });
+        
+
+        }
+    });
+
+};
+
 
 
 module.exports = {
@@ -79,5 +148,9 @@ module.exports = {
     addCourse,
     deleteCourse,
     updateCourse,
+    studentfinishedcourses,
+    updateprogress,
+    studentincourse,
+    conductorenrollcourse,
     
 };
