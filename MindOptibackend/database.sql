@@ -82,14 +82,7 @@ CREATE DARABASE LMS;
    foreign key(UserID) references User_(UserID));
 
    ------------------------------
-   create table Message_
-   (
-   MessageId SERIAL,
-   MessageBody varchar(500),
-   sender varchar(10),
-   primary key(MessageId));
-
-   ------------------------------
+ 
    create table Qualification
    (
    UserID varchar(10),
@@ -131,14 +124,15 @@ CREATE DARABASE LMS;
    create table Forum_question
    (
    FQuestionID SERIAL,
-   name_  varchar(50),
+   name_  varchar(500),
    FCategoryID  SERIAL,
-   ManageTime time,
+   ManageTime datetime,
    UserID  varchar(10),
    PinStatus Boolean,
    LockStatus Boolean,
+   image VARCHAR(150),
    primary key(FQuestionID),
-   foreign key(FCategoryID) references Forum_category(FCategoryID),
+   foreign key(FCategoryID) references Forum_category(FCategoryID) ON DELETE CASCADE ,
    foreign key(UserID) references User_(UserID));
 
    ---------------------------------
@@ -150,7 +144,7 @@ CREATE DARABASE LMS;
    FQuestionID SERIAL,
    CommenterID VARCHAR(10),
    primary key(FCommentID),
-   foreign key(FQuestionID) references Forum_question(FQuestionID),
+   foreign key(FQuestionID) references Forum_question(FQuestionID) ON DELETE CASCADE ON UPDATE CASCADE,
    foreign key(CommenterID) references User_(UserID));
 
    ---------------------------------
@@ -162,7 +156,7 @@ CREATE DARABASE LMS;
    PostedTime TIMESTAMP,
    subcomID varchar(10),
    primary key(FsubCommentID),
-   foreign key(FCommentID) references Forum_Comment(FCommentID),
+   foreign key(FCommentID) references Forum_Comment(FCommentID) ON DELETE CASCADE ON UPDATE CASCADE,
    foreign key(subcomID) references User_(UserID));
 
    -----------------------------------
@@ -192,17 +186,28 @@ CREATE DARABASE LMS;
    foreign key(ModuleID) references Module(ModID));
 
    --------------------------------------
-   create table chat
+     create table chat
    (
-   StudentID varchar(10),
-   TeacherID varchar(10),
+   Senderid varchar(10),
+   Receiverid varchar(10),
    ChatTime  timestamp,
    MessageId  SERIAL,
-   primary key(StudentID,TeacherID),
-   foreign key(MessageId) references Message_(MessageId),
-   foreign key(TeacherID) references Teacher(TeacherID));
-
+   primary key(Senderid,Receiverid,MessageId),
+   foreign key(MessageId) references Message_(MessageId)
+  )
    --------------------------------------
+
+
+   create table Message_
+   (
+   MessageId SERIAL,
+   MessageBody varchar(500),
+   sender varchar(10),
+   primary key(MessageId)),
+
+
+   ------------------------------
+ 
    create table EnrollmentRequest
    (
    requestedID SERIAL,
