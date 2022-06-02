@@ -255,9 +255,9 @@ CREATE DARABASE LMS;
    (
    AssignmentID SERIAL,
    DueDate  timestamp,
-   submission  text,
    CreateTime timestamp,
    Introduction text,
+   submission  text,
    name_ varchar(100),
    ContentID  SERIAL,
    primary key(AssignmentID),
