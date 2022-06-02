@@ -6,6 +6,8 @@ const pool = require("./db");
 require('dotenv').config();
 const courseroutes = require("./models/course");
 const chatroutes = require("./models/chat");
+const userroutes = require("./models/user");
+const assignmentroutes = require("./models/assignment");
 const blogroutes = require("./models/blog");
 const path = require('path')
 const forumroutes=require("./models/forum");
@@ -21,9 +23,14 @@ app.use(bodyParser.urlencoded({extented:false}))
 app.use(bodyParser.json())
 
 app.use("/coursedetails",courseroutes);
+
+app.use("/userdetails",userroutes);
+app.use("/assignmentdetails",assignmentroutes);
+
 app.use("/message",chatroutes);
 app.use("/blog",blogroutes);
 app.use("/forums",forumroutes);
+
 
 
 
