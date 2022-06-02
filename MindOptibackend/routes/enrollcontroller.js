@@ -150,6 +150,23 @@ const acceptstudentrequest = async (req,res) => {
     });
 };
 
+//remove student from enroled course
+const removestudent = async (req,res) => {
+    const sid = req.params.sid;
+    const modid= req.params.modid;
+    await pool.query("SELECT requestedid FROM enrollmentrequest WHERE moduleid=$1 AND studentid=$2 AND isaccepted=true",[modid,sid],(error,results)=>{
+        if(!results.rows.length){
+            res.status(400).send("Not accepted or No any record");
+        }else{
+            pool.query("DELETE FROM enrollmentrequest WHERE moduleid=$1 AND studentid=$2",[modid,sid],(error,results)=>{
+                if (error) throw error;
+                res.status(200).send("Removed Students");
+            });
+            
+        }
+    });
+};
+
 
 module.exports = {
     getcoursesstudentrequorenr,
@@ -159,4 +176,5 @@ module.exports = {
     removeteacher,
     studentenrollrequest,
     acceptstudentrequest,
+    removestudent,
 };
