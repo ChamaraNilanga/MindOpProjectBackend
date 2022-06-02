@@ -1,4 +1,7 @@
 const pool = require("../db");
+const {uploadFile} = require("../s3");
+const multer = require('multer');
+const upload =multer({dest:"uploads/"});
 
 //get all blogs
 const getblogs = async(req,res) => {
@@ -24,13 +27,29 @@ const searchedblog = async(req,res) => {
 //add blog
 const addblog = async(req,res) => {
     const bid= req.params.bid;
-    const { blogtitle,body,userid} =req.body;
+    const uid=req.params.uid; 
+    const {blogtitle,body}=req.body;
+    const file=req.file;
+
+   if(file){
+    const results=await uploadFile(file);
+    if(results){
+        const image=results.Location;
+        pool.query("INSERT INTO blog (blogtitle,body,userid,managetime,image) VALUES ($1,$2,$3,CURRENT_TIMESTAMP,$4)",[blogtitle,body,uid,image],(error,results)=>{
+            if(error) throw error;
+            res.status(200).send("added blog");
+        
+        });
+    }else{
+        res.status(400).send("unable to added blog");
+    }
+   }
     //check already added
     await pool.query("SELECT blogid FROM blog WHERE blogid=$1",[bid],(error,results)=>{
        if (results.rows.length){
            res.send("Already added");
        }else{
-       pool.query("INSERT INTO blog (blogtitle,body,userid,managetime) values ($1,$2,$3,CURRENT_TIMESTAMP)",[blogtitle,body,userid],(error,results)=>{
+       pool.query("INSERT INTO blog (blogtitle,body,userid,managetime) values ($1,$2,$3,CURRENT_TIMESTAMP)",[blogtitle,body,uid],(error,results)=>{
            if (error) throw  error;
            res.status(200).send("Added a blog");
        
