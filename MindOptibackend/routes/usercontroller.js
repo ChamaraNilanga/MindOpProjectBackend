@@ -31,7 +31,7 @@ const userpro  = async(req,res) => {
  const adduser = async(req,res) => {
      const {uid,usernam,gen,dob,email,psswd,homeno,laneno,city,contactno,admin,tcher,stdnt} =req.body;
      //check already added
-     await pool.query("SELECT UserName FROM User_ WHERE UserName=$1 OR UserId=$2",[usernam,uid],(error,results)=>{
+     await pool.query("SELECT UserName FROM User_ WHERE UserId=$1 OR Email=$2",[uid,email],(error,results)=>{
         if (results.rows.length){
             res.send("Already added");
         }else{
@@ -44,6 +44,7 @@ const userpro  = async(req,res) => {
     });
 
  };
+
 
 //delete user
  const deleteUser= async(req,res) => {
@@ -80,6 +81,10 @@ const userpro  = async(req,res) => {
     });
 
  };
+ // login
+ 
+
+
 
 
 
@@ -89,6 +94,7 @@ module.exports = {
     searcheduser,
     adduser,
     deleteUser,
-    updateuser
+    updateuser,
+
     
 };
