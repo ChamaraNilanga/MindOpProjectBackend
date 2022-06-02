@@ -9,6 +9,8 @@ const chatroutes = require("./models/chat");
 const blogroutes = require("./models/blog");
 const path = require('path')
 const forumroutes=require("./models/forum");
+const userroutes = require("./models/user");
+const assignmentroutes = require("./models/assignment");
 
 app.get("/",(req,res) =>{
     res.send("hello");
@@ -24,6 +26,8 @@ app.use("/coursedetails",courseroutes);
 app.use("/message",chatroutes);
 app.use("/blog",blogroutes);
 app.use("/forums",forumroutes);
+app.use("/userdetails",userroutes);
+app.use("/assignmentdetails",assignmentroutes);
 
 
 
