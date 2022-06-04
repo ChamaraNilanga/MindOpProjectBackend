@@ -7,7 +7,7 @@ const createblogcomment=async(req,res)=>{
     const bid=req.params.bid;
     const uid=req.params.uid; 
     const {comment}=req.body;
-    await pool.query("INSERT INTO blog_comment (commentbody,blogid,bloggerid,postedtime) VALUES ($1,$2,$3,CURRENT_TIMESTAMP)",[comment,bid,uid],(error,results)=>{
+    await pool.query("INSERT INTO blog_comment (commentbody,blogid,commenterid,postedtime) VALUES ($1,$2,$3,CURRENT_TIMESTAMP)",[comment,bid,uid],(error,results)=>{
         if(error) throw error;
         res.status(200).send("added comment");
     });
@@ -16,7 +16,7 @@ const createblogcomment=async(req,res)=>{
 //get blog comments
 const getcommentslist=async(req,res)=>{
     const cid=req.params.cid;
-    await pool.query("SELECT bcommentid,commentbody,blogid,bloggerid,postedtime FROM blog_comment WHERE blogid=$1",[cid],(error,results)=>{
+    await pool.query("SELECT bcommentid,commentbody,blogid,commenterid,postedtime FROM blog_comment WHERE blogid=$1",[cid],(error,results)=>{
         if(error) throw error;
         res.status(200).json(results.rows);
     });

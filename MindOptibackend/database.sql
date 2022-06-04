@@ -102,17 +102,16 @@ CREATE DARABASE LMS;
    foreign key(UserID) references User_(UserID));
 
    --------------------------------
-   create table Blog_comment
+ create table Blog_comment
    (
    BcommentID SERIAL,
    CommentBody text,
    BlogID  SERIAL,
-   BloggerID varchar(10),
-   PostedTime time,
+   CommenterID varchar(10),
+   PostedTime TIMESTAMP,
    primary key(BcommentID),
    foreign key(BlogID) references Blog(BlogID),
-   foreign key(BloggerID) references Student(StudentID));
-
+   foreign key(CommenterID) references Student(StudentID));
    ---------------------------------
    create table Forum_category
    (

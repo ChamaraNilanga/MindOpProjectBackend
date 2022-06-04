@@ -16,12 +16,11 @@ const getblogs = async(req,res) => {
 //get searched blog
 const searchedblog = async(req,res) => {
     const key= req.params.key;
-     await pool.query("SELECT * FROM blog WHERE blogtitle=$1",[key],(error,results)=>{
+     await pool.query("SELECT * FROM blog WHERE body ~* $1",[key],(error,results)=>{
         if (error) throw  error;
         res.status(200).json(results.rows);
     });
 };
-
 
 
 //add blog
