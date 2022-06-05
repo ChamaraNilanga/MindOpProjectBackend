@@ -82,7 +82,22 @@ const userpro  = async(req,res) => {
 
  };
  // login
- 
+ const login = async(req,res) => {
+    const {uid,psswd} =req.body;
+    // error if no such user
+    await pool.query("SELECT UserName FROM User_ WHERE UserId=$1 OR Email=$1",[uid],(error,results)=>{
+       if (results.rows.length){
+         pool.query("SELECT Pass_word FROM User_ WHERE UserId=$1 OR Email=$1",[uid],(error,results)=>{
+            if (psswd==results.rows){
+                res.status(205).send("Login success");
+            }else{
+                res.status(205).send("Password is Incorrect.");
+            }
+        });
+       }else{res.status(205).send("Email is Incorrect.");}
+   });
+
+};
 
 
 
@@ -95,6 +110,7 @@ module.exports = {
     adduser,
     deleteUser,
     updateuser,
+    login
 
     
 };
