@@ -91,13 +91,13 @@ CREATE DARABASE LMS;
    foreign key(UserID) references Teacher(TeacherID));
 
    ------------------------------
-   create table Blog
+  create table Blog
    (
    BlogID SERIAL,
    BlogTitle varchar(50),
    Body text,
    UserID varchar(10),
-   ManageTime time,
+   ManageTime timestamp,
    primary key(BlogID),
    foreign key(UserID) references User_(UserID));
 
