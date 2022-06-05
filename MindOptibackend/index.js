@@ -9,6 +9,8 @@ const chatroutes = require("./models/chat");
 const blogroutes = require("./models/blog");
 const path = require('path')
 const forumroutes=require("./models/forum");
+const categoryroutes = require("./models/category");
+const questionroutes = require("./models/question");
 
 app.get("/",(req,res) =>{
     res.send("hello");
@@ -24,20 +26,20 @@ app.use("/coursedetails",courseroutes);
 app.use("/message",chatroutes);
 app.use("/blog",blogroutes);
 app.use("/forums",forumroutes);
+app.use("/categorydetails",categoryroutes);
+app.use("/questiondetails",questionroutes);
+
+
+const PORT =process.env.PORT || 8070
 
 
 
-const PORT =process.env.PORT || 3000
 
+app.listen(8070, () => {
+    console.log("server is in port 8070");
+});
 
-
-
-app.listen(8052, () => {
-    console.log(`Server is running on port 8052`)
-}
-)
-
-//http://localhost:3000/chat
+//http://localhost:8070/cate/add
 
 
 

@@ -301,38 +301,41 @@ CREATE DARABASE LMS;
    ------------------------------------
    create table QuestionSubCategory
    (
-   QuestionSubCategoryID SERIAL,
+   QuestionSubCategoryID varchar(20),
    SubCatName varchar(50),
-   primary key(QuestionSubCategoryID));
+	CategoryID  varchar(20),
+   primary key(QuestionSubCategoryID),
+   foreign key(CategoryID) references QuestionCategory(CategoryID));
+
 
    -----------------------------------
-   create table QuestionCategory
+  create table QuestionCategory
    (
-   CategoryID SERIAL,
+   CategoryID varchar(20),
    CategoryName VARCHAR(50),
-   SubCategoryID SERIAL,
-   primary key(CategoryID),
-   foreign key(SubCategoryID) references QuestionSubCategory(QuestionSubCategoryID));
+   SubCategoryID varchar(20),
+   primary key(CategoryID)
+	   )
 
    ---------------------------------
    create table QuizQuestion
    (
    QID SERIAL,
-   mark varchar(10),
-   createdDate date,
+   mark integer,
+   createdDate timestamp,
    QuestionName varchar(100),
-   LastModifiedDate date,
+   LastModifiedDate timestamp,
    QuestionText text,
-   QuestionCategoryID SERIAL,
    TeacherID varchar(10),
    CreatedTime timestamp,
    type_ varchar(50),
+	 QuestionCategoryID varchar(20),
    primary key(QID),
    foreign key(TeacherID) references Teacher(TeacherID),
    foreign key(QuestionCategoryID) references QuestionCategory(CategoryID));
 
    ---------------------------------
-   create table QuizHasQuizQuestion
+     create table QuizHasQuizQuestion
    (
    QuizID varchar(10),
    QID SERIAL,
@@ -344,7 +347,7 @@ CREATE DARABASE LMS;
    create table CorrectAnswer
    (
    QID SERIAL,
-   CorrectAnswer varchar(10),
+   CorrectAnswer varchar(100),
    primary key(QID,CorrectAnswer),
    foreign key(QID) references QuizQuestion(QID));
 
@@ -353,7 +356,7 @@ CREATE DARABASE LMS;
    (
    StudentID varchar(10),
    QID SERIAL,
-   GivenAnswer varchar(10),
+   GivenAnswer varchar(100),
    primary key(StudentID,QID),
    foreign key(QID) references QuizQuestion(QID),
    foreign key(StudentID) references Student(StudentID));
@@ -362,7 +365,7 @@ CREATE DARABASE LMS;
    create table Tag
    (
    QID SERIAL,
-   Tag varchar(20),
+   Tag varchar(100),
    primary key(QID,Tag),
    foreign key(QID) references QuizQuestion(QID));
 
