@@ -18,9 +18,20 @@ app.get("/",(req,res) =>{
 });
 
 
-app.use(express.json());
-app.use(bodyParser.urlencoded({extented:false}))
-app.use(bodyParser.json())
+// app.use(express.json());
+// app.use(bodyParser.urlencoded({extented:false}))
+// app.use(bodyParser.json())
+app.use(cors())
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  )
+  next()
+})
 
 app.use("/coursedetails",courseroutes);
 app.use("/message",chatroutes);
@@ -36,7 +47,7 @@ const PORT =process.env.PORT || 3000
 
 
 
-app.listen(8052, () => {
+app.listen(8070, () => {
     console.log(`Server is running on port 8052`)
 }
 )
