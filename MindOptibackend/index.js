@@ -11,6 +11,7 @@ const path = require('path')
 const forumroutes=require("./models/forum");
 const categoryroutes = require("./models/category");
 const questionroutes = require("./models/question");
+const quizroutes = require("./models/quiz");
 
 app.get("/",(req,res) =>{
     res.send("hello");
@@ -28,7 +29,7 @@ app.use("/blog",blogroutes);
 app.use("/forums",forumroutes);
 app.use("/categorydetails",categoryroutes);
 app.use("/questiondetails",questionroutes);
-
+app.use("/quizdetails",quizroutes);
 
 const PORT =process.env.PORT || 8070
 

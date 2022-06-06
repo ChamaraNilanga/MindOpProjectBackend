@@ -5,7 +5,9 @@ const createQuestion1 = async(req,res) => {
     const { text} =req.body;
     const { mrk} =req.body;
     const { qname} =req.body;
-    
+    /*const d=[];
+    d.push(cat);
+    d.push(dog);*/
     const qtype=req.params.qtype; 
     const catID=req.params.catID; 
     await pool.query("SELECT type_ FROM QuizQuestion WHERE type_=$1 ",[qtype],(error,results)=>{

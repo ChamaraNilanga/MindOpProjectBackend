@@ -280,12 +280,18 @@ CREATE DARABASE LMS;
    foreign key(StudentID) references Student(StudentID));
 
    ---------------------------------------
-   create table Quiz
+   
+create table Quiz
    (
    QuizID VARCHAR(10),
    Description_ text,
    TimeLimit time,
    ContentID SERIAL,
+   QuizName VARCHAR(100),  
+	 Grade integer,
+	 NaviMethod VARCHAR(100),
+	 Layout VARCHAR(100),
+	 Availability VARCHAR(100)
    primary key(QuizID),
    foreign key(ContentID) references Content(contentID));
 
