@@ -16,7 +16,7 @@ router.get("/searchquizactivity/:key",controller.searchQuiz);
 router.get("/searchquizactivity2/:key",controller.searchQuiz2);
 router.delete("/deletequizactivity/:id",controller.deleteQuiz);
 router.put("/editquizactivity/:qid&:cid",controller.editQuiz);
-
+router.post("/attemptquizactivity/:qid&:sid", controller.attemptQuiz);
 
 
 module.exports=router;
