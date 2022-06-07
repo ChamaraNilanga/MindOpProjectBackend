@@ -11,6 +11,26 @@ const getblogs = async(req,res) => {
     });
 };
 
+//get blog by id
+const getblog = async(req,res) => {
+    const id= req.params.id;
+    await pool.query("SELECT * FROM blog WHERE blogid=$1",[id],(error,results)=>{
+        if (error) throw  error;
+        res.status(200).json(results.rows);
+    });
+};
+
+
+
+
+const getblogbody = async(req,res) => {
+    const key= req.params.key;
+    await pool.query("SELECT body FROM blog where blogid=$1",[key],(error,results)=>{
+        if (error) throw  error;
+        res.status(200).json(results.rows);
+    });
+};
+
 
 
 //get searched blog
@@ -94,10 +114,14 @@ const addblog = async(req,res) => {
 
 
 
+
 module.exports = {
     getblogs,
+    getblog,
+    getblogbody,
     searchedblog,
     addblog,
     updateblog,
     deleteblog
+    
 }

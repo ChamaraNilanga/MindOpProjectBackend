@@ -14,6 +14,8 @@ next();
 });
 
 router.get("/", controller.getblogs);
+router.get("/:id",controller.getblog);
+router.get("/getblogbody/:key",controller.getblogbody);
 router.get("/:key", controller.searchedblog);
 router.post("/", controller.addblog);
 router.put("/updateblog/:id",controller.updateblog);
