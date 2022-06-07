@@ -96,14 +96,15 @@ const attemptQuiz=async(req,res)=>{
     const QuizID=req.params.qid;
     const StudentID=req.params.sid; 
     const {attempttime,attemptdate}=req.body;
-    pool.query("SELECT QuizID AND StudentID FROM QuizAttempt WHERE QuizID=$1 AND StudentID=$2 ",[qid,sid],(error,results)=>{
+    pool.query("SELECT QuizID,StudentID FROM QuizAttempt WHERE QuizID=$1 AND StudentID=$2 ",[QuizID,StudentID],(error,results)=>{
        if (!results.rows.length){
-           res.send("Student attempted the Quiz Activity");
+        pool.query("INSERT INTO QuizAttempt (QuizID,StudentID,AttemptTime,AttemptDate) VALUES ($1,$2,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)",[QuizID,StudentID],(error,results)=>{
+            if(error)throw error;
+            res.status(201).send("Student attempt recorded");
+        });
+          
        }else{
-           pool.query("INSERT INTO QuizAttempt (QuizID,StudentID,AttemptTime,AttemptDate) VALUES ($1,$2,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)",[qid,sid],(error,results)=>{
-               if(error)throw error;
-               res.status(201).send("Student attemt recorded");
-           });
+        res.send("Student attempted the Quiz Activity");
        }
 
    });
