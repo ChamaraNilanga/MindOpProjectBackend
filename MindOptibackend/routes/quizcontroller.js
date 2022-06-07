@@ -75,7 +75,8 @@ const deleteQuiz= async(req,res) => {
 //edit Quiz activity
 const editQuiz=async(req,res)=>{
     const id=req.params.qid;
-    const {qname,quizdes,timelimit,grade,navimethod,layout,availability,contentID}=req.body;
+    const contentID=req.params.cid; 
+    const {qname,quizdes,timelimit,grade,navimethod,layout,availability}=req.body;
     pool.query("SELECT QuizID FROM Quiz WHERE QuizID=$1 ",[id],(error,results)=>{
        if (!results.rows.length){
            res.send("No any Quiz Activity to that ID");

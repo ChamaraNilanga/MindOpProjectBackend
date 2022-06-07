@@ -15,7 +15,7 @@ router.get("/displayquizactivity", controller.displayQuiz);
 router.get("/searchquizactivity/:key",controller.searchQuiz);
 router.get("/searchquizactivity2/:key",controller.searchQuiz2);
 router.delete("/deletequizactivity/:id",controller.deleteQuiz);
-router.put("/editquizactivity/:id",controller.editQuiz);
+router.put("/editquizactivity/:qid&:cid",controller.editQuiz);
 
 
 
