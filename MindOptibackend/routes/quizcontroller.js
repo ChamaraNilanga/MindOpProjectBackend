@@ -95,10 +95,11 @@ const editQuiz=async(req,res)=>{
 const attemptQuiz=async(req,res)=>{
     const QuizID=req.params.qid;
     const StudentID=req.params.sid; 
+    const Finalgrade=req.params.finalgrade; 
     const {attempttime,attemptdate}=req.body;
     pool.query("SELECT QuizID,StudentID FROM QuizAttempt WHERE QuizID=$1 AND StudentID=$2 ",[QuizID,StudentID],(error,results)=>{
        if (!results.rows.length){
-        pool.query("INSERT INTO QuizAttempt (QuizID,StudentID,AttemptTime,AttemptDate) VALUES ($1,$2,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)",[QuizID,StudentID],(error,results)=>{
+        pool.query("INSERT INTO QuizAttempt (QuizID,StudentID,AttemptTime,AttemptDate,SubmittedTime,Finalgrade) VALUES ($1,$2,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,$3)",[QuizID,StudentID,Finalgrade],(error,results)=>{
             if(error)throw error;
             res.status(201).send("Student attempt recorded");
         });
@@ -110,8 +111,87 @@ const attemptQuiz=async(req,res)=>{
    });
 
 }; 
+//Delete Student attempt
 
-//Save students answers in the database
+const deleteAttempt= async(req,res) => {
+    const QuizID=req.params.qid;
+    const StudentID=req.params.sid; 
+    await pool.query("SELECT QuizID,StudentID FROM QuizAttempt WHERE QuizID=$1 AND StudentID=$2 ",[QuizID,StudentID],(error,results)=>{
+        if (!results.rows.length){
+            res.send("No any Attempt record");
+        }else{
+            pool.query("DELETE FROM QuizAttempt WHERE QuizID=$1 AND StudentID=$2 ",[QuizID,StudentID],(error,results)=>{
+                if(error)throw error;
+                res.status(201).send("Attempt Deleted");
+            });
+        }
+
+    });
+
+ };
+
+ //Display all attempts
+ const displayAllAttempts = async(req,res) => {
+    await pool.query("SELECT * FROM QuizAttempt",(error,results)=>{
+        if (error) throw  error;
+        res.status(200).json(results.rows);
+    });
+};
+
+//Search attempt
+const searchattempt = async(req,res) => {
+    const QuizID=req.params.qid;
+    const StudentID=req.params.sid; 
+     await pool.query("select QuizID,StudentID,AttemptTime,AttemptDate,SubmittedTime,Finalgrade from QuizAttempt where QuizID=$1 and StudentID=$2",[QuizID,StudentID],(error,results)=>{
+        if (error) throw  error;
+        res.status(200).json(results.rows);
+    });
+};
+
+
+
+
+//Diplay student answers
+const displayAllStudentAnswers=async(req,res)=>{
+    await pool.query("SELECT * FROM StudentAnswer  ",(error,results)=>{
+       
+        if (error) throw  error;
+        res.status(200).json(results.rows);
+        
+    });
+};
+
+//Display the question's answers given by one student
+const displayAnswersofOneStudent=async(req,res)=>{
+    const StudentID=req.params.sid;
+    await pool.query("SELECT * FROM StudentAnswer WHERE  StudentID=$1 ",[StudentID],(error,results)=>{
+       
+        if (error) throw  error;
+        res.status(200).json(results.rows);
+        
+    });
+};
+
+//Display Student Answers for a selected question
+const displayStudentAnswersForaQuestion=async(req,res)=>{
+    const QID=req.params.qid;
+    await pool.query("select StudentID,GivenAnswer from StudentAnswer where QID=$1",[QID],(error,results)=>{
+       
+        if (error) throw  error;
+        res.status(200).json(results.rows);
+        
+    });
+};
+
+// Grader report
+
+   
+   
+
+
+
+
+
 //Checking Student answers
 //generate reports
 
@@ -127,4 +207,10 @@ module.exports = {
     deleteQuiz,
     editQuiz,
     attemptQuiz,
+    displayAllStudentAnswers,
+    displayAnswersofOneStudent,
+    displayStudentAnswersForaQuestion,
+    deleteAttempt,
+    displayAllAttempts,
+    searchattempt,
  };

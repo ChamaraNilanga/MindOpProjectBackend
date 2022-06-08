@@ -16,7 +16,17 @@ router.get("/searchquizactivity/:key",controller.searchQuiz);
 router.get("/searchquizactivity2/:key",controller.searchQuiz2);
 router.delete("/deletequizactivity/:id",controller.deleteQuiz);
 router.put("/editquizactivity/:qid&:cid",controller.editQuiz);
+
 router.post("/attemptquizactivity/:qid&:sid", controller.attemptQuiz);
+router.delete("/deleteattempt/:qid&:sid", controller.deleteAttempt);
+router.get("/displayallattempts",controller.displayAllAttempts);
+router.get("/searchattempt/:qid&:sid",controller.searchattempt);
+
+router.get("/displaystudentanswers", controller.displayAllStudentAnswers);
+router.get("/displayanswersofonestudent/:sid", controller.displayAnswersofOneStudent);
+router.get("/displaystudentanswersforaquestion/:qid", controller.displayStudentAnswersForaQuestion);
+
+
 
 
 module.exports=router;

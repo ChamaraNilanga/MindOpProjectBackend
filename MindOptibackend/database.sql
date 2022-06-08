@@ -302,6 +302,8 @@ create table Quiz
    StudentID varchar(10),
    AttemptTime timestamp,
    AttemptDate timestamp,
+   SubmittedTime timestamp,
+   Finalgrade integer,
    primary key(QuizID,StudentID),
    foreign key(StudentID) references Student(StudentID));
 

@@ -13,6 +13,8 @@ const categoryroutes = require("./models/category");
 const questionroutes = require("./models/question");
 const quizroutes = require("./models/quiz");
 
+app.use(cors());
+
 app.get("/",(req,res) =>{
     res.send("hello");
     console.log("server");
@@ -41,6 +43,7 @@ app.listen(8070, () => {
 });
 
 //http://localhost:8070/cate/add
+
 
 
 
