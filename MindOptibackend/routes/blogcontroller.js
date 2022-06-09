@@ -11,15 +11,24 @@ const getblogs = async(req,res) => {
     });
 };
 
-//get blog by id
-const getblog = async(req,res) => {
-    const id= req.params.id;
-    await pool.query("SELECT * FROM blog WHERE blogid=$1",[id],(error,results)=>{
-        if (error) throw  error;
+//get blog by blog id
+const getblogbyid = async(req,res) => {
+    const bid= req.params.bid;
+    await pool.query("SELECT * FROM blog WHERE blogid=$1",[bid],(error,results)=>{
+        if (error) throw error;
         res.status(200).json(results.rows);
     });
 };
 
+
+//get blog by user id
+const getblogbyuser = async(req,res) => {
+    const uid= req.params.uid;
+    await pool.query("SELECT * FROM blog WHERE userid=$1",[uid],(error,results)=>{
+        if (error) throw  error;
+        res.status(200).json(results.rows);
+    });
+};
 
 
 
@@ -33,10 +42,10 @@ const getblogbody = async(req,res) => {
 
 
 
-//get searched blog
+//get searched blog (Regex)
 const searchedblog = async(req,res) => {
-    const key= req.params.key;
-     await pool.query("SELECT * FROM blog WHERE body ~* $1",[key],(error,results)=>{
+    const string= req.params.string;
+     await pool.query("SELECT * FROM blog WHERE body ~* $1",[string],(error,results)=>{
         if (error) throw  error;
         res.status(200).json(results.rows);
     });
@@ -63,18 +72,26 @@ const addblog = async(req,res) => {
         res.status(400).send("unable to added blog");
     }
    }
+  else{
+    pool.query("INSERT INTO blog (blogtitle,body,userid,managetime) VALUES ($1,$2,$3,CURRENT_TIMESTAMP)",[blogtitle,body,uid],(error,results)=>{
+        if(error) throw error;
+        res.status(200).send("added blog");
+    
+    });
+  }
+
     //check already added
-    await pool.query("SELECT blogid FROM blog WHERE blogid=$1",[bid],(error,results)=>{
-       if (results.rows.length){
-           res.send("Already added");
-       }else{
-       pool.query("INSERT INTO blog (blogtitle,body,userid,managetime) values ($1,$2,$3,CURRENT_TIMESTAMP)",[blogtitle,body,uid],(error,results)=>{
-           if (error) throw  error;
-           res.status(200).send("Added a blog");
+//     await pool.query("SELECT blogid FROM blog WHERE blogid=$1",[bid],(error,results)=>{
+//        if (results.rows.length){
+//            res.send("Already added");
+//        }else{
+//        pool.query("INSERT INTO blog (blogtitle,body,userid,managetime) values ($1,$2,$3,CURRENT_TIMESTAMP)",[blogtitle,body,uid],(error,results)=>{
+//            if (error) throw  error;
+//            res.status(200).send("Added a blog");
        
-       });
-     }
-   });
+//        });
+//      }
+//    });
 }; 
 
 //update blog
@@ -117,7 +134,8 @@ const addblog = async(req,res) => {
 
 module.exports = {
     getblogs,
-    getblog,
+    getblogbyid,
+    getblogbyuser,
     getblogbody,
     searchedblog,
     addblog,

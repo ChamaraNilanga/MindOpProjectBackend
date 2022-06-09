@@ -14,13 +14,14 @@ next();
 });
 
 router.get("/", controller.getblogs);
-router.get("/:id",controller.getblog);
+router.get("/byblogid/:bid",controller.getblogbyid);
+router.get("/user/:uid",controller.getblogbyuser);
 router.get("/getblogbody/:key",controller.getblogbody);
-router.get("/:key", controller.searchedblog);
-router.post("/", controller.addblog);
+router.get("/:string", controller.searchedblog);
+// router.post("/", controller.addblog);
 router.put("/updateblog/:id",controller.updateblog);
 router.delete("/:id",controller.deleteblog);
-router.post("/blog/:bid&:uid",upload.single('image'),controller.addblog);
+router.post("/addblog/:uid",upload.single('image'),controller.addblog);
 router.post("/comment/:uid&:bid",controller1.createblogcomment);
 router.get("/comment/:cid",controller1.getcommentslist);
 router.delete("/comment/:id",controller1.deletecomments);
