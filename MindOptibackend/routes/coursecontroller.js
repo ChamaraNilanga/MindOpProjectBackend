@@ -19,13 +19,13 @@ const getcourses = async(req,res) => {
 
 //add courses
  const addCourse = async(req,res) => {
-     const { modname,descrip,star,end,adminid,modcode } =req.body;
+     const { modname,descrip,star,end,adminid,modcode,price } =req.body;
      //check already added
      await pool.query("SELECT ModName FROM Module WHERE ModName=$1 OR ModCode=$2",[modname,modcode],(error,results)=>{
         if (results.rows.length){
             res.send("Already added");
         }else{
-        pool.query("INSERT INTO Module (ModName,Descrip,sdate,enddate,adminid,modcode) values ($1,$2,$3,$4,$5,$6)",[modname,descrip,star,end,adminid,modcode],(error,results)=>{
+        pool.query("INSERT INTO Module (ModName,Descrip,sdate,enddate,adminid,modcode,price) values ($1,$2,$3,$4,$5,$6,$7)",[modname,descrip,star,end,adminid,modcode,price],(error,results)=>{
             if (error) throw  error;
             res.status(200).send("added course");
         
