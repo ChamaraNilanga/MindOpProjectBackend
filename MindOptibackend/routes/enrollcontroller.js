@@ -8,6 +8,14 @@ const getcoursesstudentrequorenr = async(req,res) => {
         res.status(200).json(results.rows);
     });
 };
+//student req for module
+const getreqformodule = async(req,res) => {
+    const modid=req.params.modid;
+    await pool.query("SELECT u.username,e.requestedid,u.email,m.modname FROM user_ u,EnrollmentRequest e,module m WHERE m.modid=e.moduleid AND e.moduleid=$1 AND u.userid=e.studentid AND e.isaccepted IS NULL",[modid],(error,results)=>{
+        if (error) throw  error;
+        res.status(200).json(results.rows);
+    });
+};
 
 //teacher request for conduct
 const teacherrequest = async(req,res) => {
@@ -177,4 +185,5 @@ module.exports = {
     studentenrollrequest,
     acceptstudentrequest,
     removestudent,
+    getreqformodule,
 };
