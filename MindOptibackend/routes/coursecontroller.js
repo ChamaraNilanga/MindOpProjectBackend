@@ -8,6 +8,15 @@ const getcourses = async(req,res) => {
     });
 };
 
+//get single courses
+const getsinglecourses = async(req,res) => {
+    const id=req.params.id;
+    await pool.query("SELECT * FROM Module WHERE modid=$1",[id],(error,results)=>{
+        if (error) throw  error;
+        res.status(200).json(results.rows);
+    });
+};
+
 //get searched course
  const searchedcourses = async(req,res) => {
      const key= req.params.key;
@@ -144,6 +153,7 @@ const conductorenrollcourse = async(req,res) => {
 
 module.exports = {
     getcourses,
+    getsinglecourses,
     searchedcourses,
     addCourse,
     deleteCourse,
