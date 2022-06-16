@@ -57,7 +57,7 @@ const teacherrequest = async(req,res) => {
 
 //show the teacher request list 
 const getteacherrequestlist = async(req,res) => {
-    await pool.query("SELECT t.tid,t.modid,t.requesttime,m.modname FROM teacherrequests t,module m WHERE t.modid=m.modid AND t.acceptstatus=false",(error,results)=>{
+    await pool.query("SELECT t.tid,t.modid,t.requesttime,m.modname,u.username,m.modcode FROM teacherrequests t,module m,user_ u WHERE t.modid=m.modid AND t.acceptstatus=false AND t.tid=u.userid",(error,results)=>{
         if (error) throw  error;
         res.status(200).json(results.rows);
     });
