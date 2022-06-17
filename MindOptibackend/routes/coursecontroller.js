@@ -78,12 +78,12 @@ const getsinglecourses = async(req,res) => {
 //update course
  const updateCourse=async(req,res)=>{
      const id=req.params.id;
-     const { descrip,start,end }=req.body;
-     await pool.query("SELECT modcode FROM Module WHERE modcode=$1 ",[id],(error,results)=>{
+     const { descrip,start,end,price }=req.body;
+     await pool.query("SELECT modcode FROM Module WHERE modid=$1 ",[id],(error,results)=>{
         if (!results.rows.length){
             res.send("No any course relevent to that code");
         }else{
-            pool.query("UPDATE Module SET sdate=$1,enddate=$3,descrip=$4 WHERE modcode=$2 ",[start,id,end,descrip],(error,results)=>{
+            pool.query("UPDATE Module SET sdate=$1,enddate=$3,descrip=$4,price=$5 WHERE modid=$2 ",[start,id,end,descrip,price],(error,results)=>{
                 if(error)throw error;
                 res.status(201).send("Course Updated");
             });
