@@ -11,7 +11,7 @@ const getcoursesstudentrequorenr = async(req,res) => {
 //student req for module
 const getreqformodule = async(req,res) => {
     const modid=req.params.modid;
-    await pool.query("SELECT u.username,e.requestedid,u.email,m.modname FROM user_ u,EnrollmentRequest e,module m WHERE m.modid=e.moduleid AND e.moduleid=$1 AND u.userid=e.studentid AND e.isaccepted IS NULL",[modid],(error,results)=>{
+    await pool.query("SELECT u.username,u.userid,e.requestedid,u.email,m.modname FROM user_ u,EnrollmentRequest e,module m WHERE m.modid=e.moduleid AND e.moduleid=$1 AND u.userid=e.studentid AND e.isaccepted IS NULL",[modid],(error,results)=>{
         if (error) throw  error;
         res.status(200).json(results.rows);
     });

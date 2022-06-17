@@ -47,19 +47,32 @@ const getsinglecourses = async(req,res) => {
 //delete course
  const deleteCourse= async(req,res) => {
     const id=req.params.id;
-    await pool.query("SELECT modcode FROM Module WHERE modcode=$1 ",[id],(error,results)=>{
+    await pool.query("SELECT modcode FROM Module WHERE modid=$1 ",[id],(error,results)=>{
         if (!results.rows.length){
             res.send("No any course relevent to that code");
         }else{
-            pool.query("DELETE FROM Module WHERE modcode=$1 ",[id],(error,results)=>{
-                if(error)throw error;
-                res.status(201).send("Course Deleted");
-            });
+            pool.query("SELECT e.moduleid FROM enrollmentrequest e WHERE e.moduleid=$1",[id],(error,results)=>{
+                if(results.rows.length){
+                    res.send("Course has conducting request");
+                }else{
+                    pool.query("SELECT modid FROM teacherrequests WHERE modid=$1",[id],(error,results)=>{
+                        if(results.rows.length){
+                            res.send("Course has enrollment request");
+                        }else{
+                            pool.query("DELETE FROM Module WHERE modid=$1 ",[id],(error,results)=>{
+                                if(error)throw error;
+                                res.status(201).send("Course Deleted");
+                            });
+                        }
+
+                }
+              )
+            }
+            
         }
-
-    });
-
- };
+      )
+    };
+})};
 
 
 //update course
