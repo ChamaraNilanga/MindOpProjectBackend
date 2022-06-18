@@ -196,13 +196,21 @@ const assignteachertomodule = async(req,res) => {
     const modid = req.params.modid;
     await pool.query("SELECT teacherid FROM teacher WHERE teacherid=$1",[tid],(error,results)=>{
         if(results.rows.length){
-            pool.query("UPDATE teacherrequests SET acceptby=$1,acceptstatus=true WHERE modid=$2 AND tid=$3",[admin,modid,tid],(error,results)=>{
-                if(error) throw error;
-                pool.query("UPDATE Module SET isconducting=true WHERE modid=$1",[modid],(error,results)=>{
-                    if(error) throw error;
-                    res.status(200).send("Assign teacher");
-                });
-            });
+            pool.query("SELECT modid FROM module WHERE isconducting=true AND modid=$1",[modid],(error,results)=>{
+                if(!results.rows.length){
+                    pool.query("UPDATE teacherrequests SET acceptby=$1,acceptstatus=true WHERE modid=$2 AND tid=$3",[admin,modid,tid],(error,results)=>{
+                        if(error) throw error;
+                        pool.query("UPDATE Module SET isconducting=true,teacherid=$2 WHERE modid=$1",[modid,tid],(error,results)=>{
+                            if(error) throw error;
+                            res.status(200).send("Assign teacher");
+                        });
+                    });
+                    
+                }else{
+                    res.status(400).send("Allready conducting by teacher");
+                }
+            })
+            
         }else
            
         {
