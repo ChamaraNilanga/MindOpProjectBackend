@@ -11,7 +11,7 @@ const getcoursesstudentrequorenr = async(req,res) => {
 //student req for module
 const getreqformodule = async(req,res) => {
     const modid=req.params.modid;
-    await pool.query("SELECT u.username,u.userid,e.requestedid,u.email,m.modname FROM user_ u,EnrollmentRequest e,module m WHERE m.modid=e.moduleid AND e.moduleid=$1 AND u.userid=e.studentid AND e.isaccepted IS NULL",[modid],(error,results)=>{
+    await pool.query("SELECT u.username,u.userid,e.requestedid,u.email,m.modname,m.modid FROM user_ u,EnrollmentRequest e,module m WHERE m.modid=e.moduleid AND e.moduleid=$1 AND u.userid=e.studentid AND e.isaccepted IS NULL",[modid],(error,results)=>{
         if (error) throw  error;
         res.status(200).json(results.rows);
     });
@@ -175,6 +175,24 @@ const removestudent = async (req,res) => {
     });
 };
 
+const deletestudentreq = async (req,res) => {
+    const id = req.params.id;
+    await pool.query("SELECT requestedid FROM enrollmentrequest WHERE requestedid=$1 AND isaccepted IS NULL",[id],(error,results)=>{
+        if(results.rows.length){
+            pool.query("DELETE FROM enrollmentrequest WHERE requestedid=$1",[id],(error,results)=>{
+                if (error) throw error;
+                res.status(200).send("Removed Request");
+            });
+        }else{
+            res.status(400).send("no request")
+        }
+    })
+
+    }
+    
+     
+    
+
 
 module.exports = {
     getcoursesstudentrequorenr,
@@ -186,4 +204,5 @@ module.exports = {
     acceptstudentrequest,
     removestudent,
     getreqformodule,
+    deletestudentreq,
 };

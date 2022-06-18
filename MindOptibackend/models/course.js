@@ -29,6 +29,7 @@ router.get("/studentenroll/:sid",controller1.getcoursesstudentrequorenr);
 router.post("/teacherrequest/:tid&:modid",controller1.teacherrequest);
 router.post("/studentenroll/:sid&:modid",controller1.studentenrollrequest);
 router.delete("/studentenroll/:sid&:modid",controller1.removestudent);
+router.delete("/studentreqdelete/:id",controller1.deletestudentreq);
 
 
 
