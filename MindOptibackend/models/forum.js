@@ -19,6 +19,7 @@ router.post("/comment/:uid&:qid",controller1.createforumcomment);
 router.post("/question/:catid&:uid",upload.single('image'),controller.createforumquestion);
 router.post("/subcomment/:cid&:uid",controller1.createforumsubcomment);
 router.get("/category",controller.getcategories);
+router.get("/mylist/:userid",controller.getmylist);
 router.get("/comment/:cid",controller1.getcommentslist);
 router.get("/subcomment/:cid",controller1.getsubcommentslist);
 router.get("/question/:cid",controller.getquestionlist);

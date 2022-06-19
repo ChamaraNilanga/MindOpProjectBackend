@@ -124,7 +124,7 @@ CREATE DARABASE LMS;
    create table Forum_question
    (
    FQuestionID SERIAL,
-   name_  varchar(500),
+   name_  text,
    FCategoryID  SERIAL,
    ManageTime datetime,
    UserID  varchar(10),

@@ -98,6 +98,18 @@ const deletequestion=async(req,res)=>{
         }
     });
 };
+//get my list
+const getmylist=async(req,res)=>{
+    const userid=req.params.userid;
+    await pool.query("SELECT * FROM forum_question WHERE userid=$1",[userid],(error,results)=>{
+        if(results.rows.length){
+            res.status(200).json(results.rows);
+        }else{
+            res.status(400).send("No any question related to this user");
+        }
+    });
+};
+
 
 //search questions
 const searchforumques = async(req,res) => {
@@ -116,4 +128,5 @@ module.exports = {
     getquestionlist,
     deletequestion,
     searchforumques,
+    getmylist,
 };
