@@ -50,7 +50,7 @@ const createforumsubcomment=async(req,res)=>{
 //get forum subcomments
 const getsubcommentslist=async(req,res)=>{
     const cid=req.params.cid;
-    await pool.query("SELECT fsubcommentid,body,postedtime,fcommentid,subcomid FROM forum_sub_comment WHERE fcommentid=$1",[cid],(error,results)=>{
+    await pool.query("SELECT s.fsubcommentid,s.body,s.postedtime,s.fcommentid,s.subcomid,u.username FROM forum_sub_comment s,user_ u WHERE u.userid=s.subcomid AND fcommentid=$1",[cid],(error,results)=>{
         if(error) throw error;
         res.status(200).json(results.rows);
     });
