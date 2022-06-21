@@ -118,7 +118,8 @@ const getmylist=async(req,res)=>{
 //search questions
 const searchforumques = async(req,res) => {
     const key= req.params.key;
-     await pool.query("SELECT fquestionid,name_,managetime,userid FROM forum_question WHERE name_ LIKE '%' || $1 || '%'",[key],(error,results)=>{
+    const cid=req.params.id;
+     await pool.query("SELECT fquestionid,name_,managetime,userid FROM forum_question WHERE name_ LIKE '%' || $1 || '%' AND fcategoryid=$2",[key,cid],(error,results)=>{
         if (error) throw  error;
         res.status(200).json(results.rows);
     });

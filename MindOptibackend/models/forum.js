@@ -24,7 +24,7 @@ router.get("/mylist/:userid",controller.getmylist);
 router.get("/comment/:cid",controller1.getcommentslist);
 router.get("/subcomment/:cid",controller1.getsubcommentslist);
 router.get("/question/:cid",controller.getquestionlist);
-router.get("/search/:key",controller.searchforumques);
+router.get("/search/:key&:id",controller.searchforumques);
 router.delete("/category/:id",controller.deletecategory);
 router.delete("/question/:id",controller.deletequestion);
 router.delete("/comment/:id",controller1.deletecomments);
