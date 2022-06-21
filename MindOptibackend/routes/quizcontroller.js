@@ -9,7 +9,7 @@ const createQuiz = async(req,res) => {
     const { layout} =req.body;
     const { availability} =req.body;
     const { timelimit} =req.body;
-    const quizID=req.params.qid; 
+    const {quizID}=req.body; 
     const contentID=req.params.cid; 
     await pool.query("SELECT QuizID FROM Quiz WHERE QuizID=$1 ",[quizID],(error,results)=>{
        if (results.rows.length){
@@ -153,6 +153,7 @@ const searchattempt = async(req,res) => {
 
 //Diplay student answers
 const displayAllStudentAnswers=async(req,res)=>{
+    
     await pool.query("SELECT * FROM StudentAnswer  ",(error,results)=>{
        
         if (error) throw  error;
@@ -184,7 +185,15 @@ const displayStudentAnswersForaQuestion=async(req,res)=>{
 };
 
 // Grader report
-
+const gradeReport=async(req,res)=>{
+    const QuizID=req.params.qid;
+    await pool.query("select s.StudentID,u.UserName,q.Finalgrade from Student s , User_ u , QuizAttempt q where s.StudentId=u.UserId and q.QuizID=$1",[QuizID],(error,results)=>{
+       
+        if (error) throw  error;
+        res.status(200).json(results.rows);
+        
+    });
+};
    
    
 
@@ -213,4 +222,5 @@ module.exports = {
     deleteAttempt,
     displayAllAttempts,
     searchattempt,
+    gradeReport,
  };

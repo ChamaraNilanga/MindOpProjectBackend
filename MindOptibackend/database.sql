@@ -339,6 +339,10 @@ create table Quiz
    CreatedTime timestamp,
    type_ varchar(50),
 	 QuestionCategoryID varchar(20),
+   Answer01 varchar(200),
+   Answer02 varchar(200),
+   Answer03 varchar(200),
+   Answer04 varchar(200),
    primary key(QID),
    foreign key(TeacherID) references Teacher(TeacherID),
    foreign key(QuestionCategoryID) references QuestionCategory(CategoryID));
@@ -366,6 +370,7 @@ create table Quiz
    StudentID varchar(10),
    QID SERIAL,
    GivenAnswer varchar(100),
+   Status_ integer,
    primary key(StudentID,QID),
    foreign key(QID) references QuizQuestion(QID),
    foreign key(StudentID) references Student(StudentID));

@@ -10,7 +10,7 @@ app.use((req,res,next)=>{
     next();
 });
 
-router.post("/createquizactivity/:qid&:cid", controller.createQuiz);
+router.post("/createquizactivity/:cid", controller.createQuiz);
 router.get("/displayquizactivity", controller.displayQuiz);
 router.get("/searchquizactivity/:key",controller.searchQuiz);
 router.get("/searchquizactivity2/:key",controller.searchQuiz2);
@@ -26,7 +26,7 @@ router.get("/displaystudentanswers", controller.displayAllStudentAnswers);
 router.get("/displayanswersofonestudent/:sid", controller.displayAnswersofOneStudent);
 router.get("/displaystudentanswersforaquestion/:qid", controller.displayStudentAnswersForaQuestion);
 
-
+router.get("/viewgradereport/:qid", controller.gradeReport);
 
 
 module.exports=router;

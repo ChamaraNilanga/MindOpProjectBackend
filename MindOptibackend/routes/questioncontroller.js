@@ -5,16 +5,17 @@ const createQuestion1 = async(req,res) => {
     const { text} =req.body;
     const { mrk} =req.body;
     const { qname} =req.body;
-    /*const d=[];
-    d.push(cat);
-    d.push(dog);*/
+    const { answer01} =req.body;
+    const { answer02} =req.body;
+    const { answer03} =req.body;
+    const { answer04} =req.body;
     const qtype=req.params.qtype; 
     const catID=req.params.catID; 
     await pool.query("SELECT type_ FROM QuizQuestion WHERE type_=$1 ",[qtype],(error,results)=>{
        if (results.rows.length){
            res.send("Question type is MCQ");
        }else{
-       pool.query("INSERT INTO QuizQuestion (mark,createdDate,QuestionName,LastModifiedDate,QuestionText,CreatedTime,QuestionCategoryID) values ($1,CURRENT_TIMESTAMP,$2,CURRENT_TIMESTAMP,$3,CURRENT_TIMESTAMP,$4)",[mrk,qname,text,catID],(error,results)=>{
+       pool.query("INSERT INTO QuizQuestion (mark,createdDate,QuestionName,LastModifiedDate,QuestionText,CreatedTime,QuestionCategoryID,Answer01,Answer02,Answer03,Answer04) values ($1,CURRENT_TIMESTAMP,$2,CURRENT_TIMESTAMP,$3,CURRENT_TIMESTAMP,$4,$5,$6,$7,$8)",[mrk,qname,text,catID,answer01,answer02,answer03,answer04],(error,results)=>{
            if (error) throw  error;
            res.status(200).send("added question");
        
