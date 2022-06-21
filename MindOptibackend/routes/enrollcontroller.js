@@ -147,7 +147,7 @@ const acceptstudentrequest = async (req,res) => {
     const modid = req.params.modid;
     await pool.query("SELECT studentid FROM enrollmentrequest WHERE studentid=$1 AND moduleid=$2",[sid,modid],(error,results)=>{
         if(results.rows.length){
-            pool.query("UPDATE enrollmentrequest SET acceptid=$1,accepttime=CURRENT_TIMESTAMP,isaccepted=true WHERE moduleid=$2 AND studentid=$3",[acceptid,modid,sid],(error,results)=>{
+            pool.query("UPDATE enrollmentrequest SET acceptid=$1,accepttime=CURRENT_TIMESTAMP,isaccepted=true,progress=0 WHERE moduleid=$2 AND studentid=$3",[acceptid,modid,sid],(error,results)=>{
                 if(error) throw error;
                 res.status(200).send("Accepted request to enroll");
                
