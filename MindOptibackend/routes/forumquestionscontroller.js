@@ -1,7 +1,10 @@
 const pool = require("../db");
-const {uploadFile} = require("../s3");
+const {uploadFile,getFileStream } = require("../s3");
 const multer = require('multer');
 const upload =multer({dest:"uploads/"});
+const fs = require('fs')
+const util = require('util')
+const unlinkFile = util.promisify(fs.unlink)
 
 //creating new forum category
 const addcategory = async (req,res)=>{
@@ -53,7 +56,8 @@ const createforumquestion=async(req,res)=>{
     //console.log(results);
     //res.send("success");
     if(results){
-        const image=results.Location;
+        const image=results.key;
+        await unlinkFile(file.path);
         pool.query("INSERT INTO forum_question (name_,fcategoryid,managetime,userid,image) VALUES ($1,$2,CURRENT_TIMESTAMP,$3,$4)",[question,catid,uid,image],(error,results)=>{
             if(error) throw error;
             res.status(200).send("added question");
@@ -119,6 +123,17 @@ const searchforumques = async(req,res) => {
         res.status(200).json(results.rows);
     });
 };
+//get image
+const getImage=async(req, res) => {
+    console.log(req.params)
+    console.log("werd")
+    const key = req.params.key
+    const readStream = await getFileStream(key)
+
+    readStream.pipe(res)
+  }
+  
+
 
 module.exports = {
     addcategory,
@@ -129,4 +144,5 @@ module.exports = {
     deletequestion,
     searchforumques,
     getmylist,
+    getImage,
 };

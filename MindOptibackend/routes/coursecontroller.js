@@ -20,7 +20,7 @@ const getsinglecourses = async(req,res) => {
 //get searched course
  const searchedcourses = async(req,res) => {
      const key= req.params.key;
-      await pool.query("SELECT * FROM Module WHERE ModName LIKE '%' || $1 || '%'",[key],(error,results)=>{
+      await pool.query("SELECT * FROM Module WHERE ModName LIKE '%' || $1 || '%' ",[key],(error,results)=>{
          if (error) throw  error;
          res.status(200).json(results.rows);
      });

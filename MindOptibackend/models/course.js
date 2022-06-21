@@ -16,7 +16,7 @@ router.get("/:id", controller.getsinglecourses);
 router.post("/", controller.addCourse);
 router.get("/enroll/:id",controller.conductorenrollcourse);
 router.get("/studentreq/:modid",controller1.getreqformodule);
-router.get("/:key",controller.searchedcourses);
+router.get("/searchcourse/:key",controller.searchedcourses);
 router.get("/completedcourses/:sid",controller.studentfinishedcourses);
 router.put("/teacherreqaccept/:admin&:tid&:modid",controller1.acceptteacherrequest);
 router.put("/studentreqaccept/:accid&:sid&:modid",controller1.acceptstudentrequest);
