@@ -124,7 +124,7 @@ CREATE DARABASE LMS;
    create table Forum_question
    (
    FQuestionID SERIAL,
-   name_  varchar(500),
+   name_  text,
    FCategoryID  SERIAL,
    ManageTime datetime,
    UserID  varchar(10),
@@ -172,6 +172,7 @@ CREATE DARABASE LMS;
    CreatedTime timestamp,
    ModCode varchar(10),
    isconducting boolean,
+   price decimal,
    primary key(ModID),
    foreign key(TeacherID) references Teacher(TeacherID) ,
    foreign key(AdminID) references Admin_(AdminID));

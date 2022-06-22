@@ -8,6 +8,14 @@ const getcoursesstudentrequorenr = async(req,res) => {
         res.status(200).json(results.rows);
     });
 };
+//student req for module
+const getreqformodule = async(req,res) => {
+    const modid=req.params.modid;
+    await pool.query("SELECT u.username,u.userid,e.requestedid,u.email,m.modname,m.modid FROM user_ u,EnrollmentRequest e,module m WHERE m.modid=e.moduleid AND e.moduleid=$1 AND u.userid=e.studentid AND e.isaccepted IS NULL",[modid],(error,results)=>{
+        if (error) throw  error;
+        res.status(200).json(results.rows);
+    });
+};
 
 //teacher request for conduct
 const teacherrequest = async(req,res) => {
@@ -49,7 +57,7 @@ const teacherrequest = async(req,res) => {
 
 //show the teacher request list 
 const getteacherrequestlist = async(req,res) => {
-    await pool.query("SELECT t.tid,t.modid,t.requesttime,m.modname FROM teacherrequests t,module m WHERE t.modid=m.modid AND t.acceptstatus=false",(error,results)=>{
+    await pool.query("SELECT t.tid,t.modid,t.requesttime,m.modname,u.username,m.modcode FROM teacherrequests t,module m,user_ u WHERE t.modid=m.modid AND t.acceptstatus=false AND t.tid=u.userid",(error,results)=>{
         if (error) throw  error;
         res.status(200).json(results.rows);
     });
@@ -139,7 +147,7 @@ const acceptstudentrequest = async (req,res) => {
     const modid = req.params.modid;
     await pool.query("SELECT studentid FROM enrollmentrequest WHERE studentid=$1 AND moduleid=$2",[sid,modid],(error,results)=>{
         if(results.rows.length){
-            pool.query("UPDATE enrollmentrequest SET acceptid=$1,accepttime=CURRENT_TIMESTAMP,isaccepted=true WHERE moduleid=$2 AND studentid=$3",[acceptid,modid,sid],(error,results)=>{
+            pool.query("UPDATE enrollmentrequest SET acceptid=$1,accepttime=CURRENT_TIMESTAMP,isaccepted=true,progress=0 WHERE moduleid=$2 AND studentid=$3",[acceptid,modid,sid],(error,results)=>{
                 if(error) throw error;
                 res.status(200).send("Accepted request to enroll");
                
@@ -167,6 +175,53 @@ const removestudent = async (req,res) => {
     });
 };
 
+const deletestudentreq = async (req,res) => {
+    const id = req.params.id;
+    await pool.query("SELECT requestedid FROM enrollmentrequest WHERE requestedid=$1 AND isaccepted IS NULL",[id],(error,results)=>{
+        if(results.rows.length){
+            pool.query("DELETE FROM enrollmentrequest WHERE requestedid=$1",[id],(error,results)=>{
+                if (error) throw error;
+                res.status(200).send("Removed Request");
+            });
+        }else{
+            res.status(400).send("no request")
+        }
+    })
+
+}
+    
+const assignteachertomodule = async(req,res) => {
+    const admin = req.params.admin;
+    const tid = req.body.tid;
+    const modid = req.params.modid;
+    await pool.query("SELECT teacherid FROM teacher WHERE teacherid=$1",[tid],(error,results)=>{
+        if(results.rows.length){
+            pool.query("SELECT modid FROM module WHERE isconducting=true AND modid=$1",[modid],(error,results)=>{
+                if(!results.rows.length){
+                    pool.query("UPDATE teacherrequests SET acceptby=$1,acceptstatus=true WHERE modid=$2 AND tid=$3",[admin,modid,tid],(error,results)=>{
+                        if(error) throw error;
+                        pool.query("UPDATE Module SET isconducting=true,teacherid=$2 WHERE modid=$1",[modid,tid],(error,results)=>{
+                            if(error) throw error;
+                            res.status(200).send("Assign teacher");
+                        });
+                    });
+                    
+                }else{
+                    res.status(400).send("Allready conducting by teacher");
+                }
+            })
+            
+        }else
+           
+        {
+            res.status(400).send("Cannot find teacher");
+        }
+    });
+
+};
+     
+    
+
 
 module.exports = {
     getcoursesstudentrequorenr,
@@ -177,4 +232,7 @@ module.exports = {
     studentenrollrequest,
     acceptstudentrequest,
     removestudent,
+    getreqformodule,
+    deletestudentreq,
+    assignteachertomodule,
 };

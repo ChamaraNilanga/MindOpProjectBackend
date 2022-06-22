@@ -1,7 +1,10 @@
 const pool = require("../db");
-const {uploadFile} = require("../s3");
+const {uploadFile,getFileStream } = require("../s3");
 const multer = require('multer');
 const upload =multer({dest:"uploads/"});
+const fs = require('fs')
+const util = require('util')
+const unlinkFile = util.promisify(fs.unlink)
 
 //creating new forum category
 const addcategory = async (req,res)=>{
@@ -53,7 +56,8 @@ const createforumquestion=async(req,res)=>{
     //console.log(results);
     //res.send("success");
     if(results){
-        const image=results.Location;
+        const image=results.key;
+        await unlinkFile(file.path);
         pool.query("INSERT INTO forum_question (name_,fcategoryid,managetime,userid,image) VALUES ($1,$2,CURRENT_TIMESTAMP,$3,$4)",[question,catid,uid,image],(error,results)=>{
             if(error) throw error;
             res.status(200).send("added question");
@@ -98,15 +102,38 @@ const deletequestion=async(req,res)=>{
         }
     });
 };
+//get my list
+const getmylist=async(req,res)=>{
+    const userid=req.params.userid;
+    await pool.query("SELECT * FROM forum_question WHERE userid=$1",[userid],(error,results)=>{
+        if(results.rows.length){
+            res.status(200).json(results.rows);
+        }else{
+            res.status(400).send("No any question related to this user");
+        }
+    });
+};
+
 
 //search questions
 const searchforumques = async(req,res) => {
     const key= req.params.key;
-     await pool.query("SELECT fquestionid,name_,managetime,userid FROM forum_question WHERE name_ LIKE '%' || $1 || '%'",[key],(error,results)=>{
+    const cid=req.params.id;
+     await pool.query("SELECT fquestionid,name_,managetime,userid FROM forum_question WHERE name_ LIKE '%' || $1 || '%' AND fcategoryid=$2",[key,cid],(error,results)=>{
         if (error) throw  error;
         res.status(200).json(results.rows);
     });
 };
+//get image
+const getImage=async(req, res) => {
+    const key = req.params.key
+    await pool.query("SELECT image FROM forum_question WHERE fquestionid=$1",[key],(error,results)=>{
+        if (error) throw  error;
+        res.status(200).json(results.rows);
+    });
+  }
+  
+
 
 module.exports = {
     addcategory,
@@ -116,4 +143,6 @@ module.exports = {
     getquestionlist,
     deletequestion,
     searchforumques,
+    getmylist,
+    getImage,
 };
