@@ -2,6 +2,10 @@ const pool = require("../db");
 const {uploadFile} = require("../s3");
 const multer = require('multer');
 const upload =multer({dest:"uploads/"});
+const fs = require('fs')
+const util = require('util')
+const unlinkFile = util.promisify(fs.unlink);
+
 
 //get all blogs
 const getblogs = async(req,res) => {
@@ -62,13 +66,15 @@ const addblog = async(req,res) => {
    if(file){
     const results=await uploadFile(file);
     if(results){
-        const image=results.Location;
+       
+        const image=results.key;
+         await unlinkFile(file.path);
         pool.query("INSERT INTO blog (blogtitle,body,userid,managetime,image) VALUES ($1,$2,$3,CURRENT_TIMESTAMP,$4)",[blogtitle,body,uid,image],(error,results)=>{
             if(error) throw error;
             res.status(200).send("added blog");
         
         });
-    }else{
+    }else{ 
         res.status(400).send("unable to added blog");
     }
    }
@@ -80,37 +86,28 @@ const addblog = async(req,res) => {
     });
   }
 
-    //check already added
-//     await pool.query("SELECT blogid FROM blog WHERE blogid=$1",[bid],(error,results)=>{
-//        if (results.rows.length){
-//            res.send("Already added");
-//        }else{
-//        pool.query("INSERT INTO blog (blogtitle,body,userid,managetime) values ($1,$2,$3,CURRENT_TIMESTAMP)",[blogtitle,body,uid],(error,results)=>{
-//            if (error) throw  error;
-//            res.status(200).send("Added a blog");
-       
-//        });
-//      }
-//    });
+
 }; 
 
 //update blog
  const updateblog=async(req,res) => {
      const id=req.params.id;
-     const {btit,blogbody,user}=req.body;
-     pool.query("SELECT blogid FROM blog WHERE blogid=$1" , [id], (error, results) => {
+     const {btitle,bbody}=req.body;
+   await pool.query("SELECT blogid FROM blog WHERE blogid=$1" , [id], (error, results) => {
          if (!results.rows.length) {
              res.send("Haven't any blog for this id");
          } else {
-             pool.query("UPDATE blog SET blogtitle=$1,body=$2,userid=$3 WHERE blogid=$4" , [btit, blogbody, user,id], (error, results) => {
+             pool.query("UPDATE blog SET blogtitle=$1,body=$2 WHERE blogid=$3" , [btitle, bbody,id], (error, results) => {
                  if (error) throw error;
                  res.status(201).send("Blog details Updated");
+                 
              });
          }
 
      });
 
  };
+
 
 //  delete blog
  const deleteblog = async(req,res) => {
@@ -119,15 +116,23 @@ const addblog = async(req,res) => {
         if (!results.rows.length){
             res.send("Haven't any blog for this id");
         }else{
-            pool.query("DELETE FROM blog WHERE blogid=$1" ,[id],(error,results) => {
-                if(error)throw error;
-                res.status(201).send("Blog Deleted");
-            });
+
+            pool.query("DELETE FROM blog_comment WHERE blogid=$1" ,[id],(error,results) => {
+               if(results){
+                pool.query("DELETE FROM blog WHERE blogid=$1" ,[id],(error,results) => {
+                    if(error)throw error;
+                    res.status(201).send("Blog Deleted");
+                    
+                });
+               }
+             } )}
+
+           
         }
+    
+    );
 
-    });
-
- };
+    }
 
 
 

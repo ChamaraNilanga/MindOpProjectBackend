@@ -6,8 +6,8 @@ const pool = require("../db");
 const createblogcomment=async(req,res)=>{
     const bid=req.params.bid;
     const uid=req.params.uid; 
-    const {comment}=req.body;
-    await pool.query("INSERT INTO blog_comment (commentbody,blogid,commenterid,postedtime) VALUES ($1,$2,$3,CURRENT_TIMESTAMP)",[comment,bid,uid],(error,results)=>{
+    const {commentbody}=req.body;
+    await pool.query("INSERT INTO blog_comment (commentbody,blogid,commenterid,postedtime) VALUES ($1,$2,$3,CURRENT_TIMESTAMP)",[commentbody,bid,uid],(error,results)=>{
         if(error) throw error;
         res.status(200).send("added comment");
     });
@@ -32,7 +32,7 @@ const deletecomments=async(req,res)=>{
                 res.status(200).send("comment deleted");
             });
         }else{
-            res.status(400).send("No comment to delete");
+            res.status(400).send("No comment to delete"); 
         }
     });
 };

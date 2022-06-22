@@ -102,7 +102,7 @@ CREATE DARABASE LMS;
    foreign key(UserID) references User_(UserID));
 
    --------------------------------
- create table Blog_comment
+create table Blog_comment
    (
    BcommentID SERIAL,
    CommentBody text,
@@ -111,7 +111,7 @@ CREATE DARABASE LMS;
    PostedTime TIMESTAMP,
    primary key(BcommentID),
    foreign key(BlogID) references Blog(BlogID),
-   foreign key(CommenterID) references Student(StudentID));
+   foreign key(CommenterID) references Student(StudentID) ON DELETE CASCADE) 
    ---------------------------------
    create table Forum_category
    (
@@ -187,22 +187,25 @@ CREATE DARABASE LMS;
    --------------------------------------
      create table chat
    (
+   chatid SERIAL,
    Senderid varchar(10),
    Receiverid varchar(10),
    ChatTime  timestamp,
-   MessageId  SERIAL,
-   primary key(Senderid,Receiverid,MessageId),
-   foreign key(MessageId) references Message_(MessageId)
+   MessageBody varchar(500),
+   primary key(chatid),
+   foreign key(Senderid) references Student(StudentID)),
+   foreign key(Receiverid) references Teacher(TeacherID),
+  
   )
    --------------------------------------
 
 
-   create table Message_
-   (
-   MessageId SERIAL,
-   MessageBody varchar(500),
-   sender varchar(10),
-   primary key(MessageId)),
+  --  create table Message_
+  --  (
+  --  MessageId SERIAL,
+  --  MessageBody varchar(500),
+  --  sender varchar(10),
+  --  primary key(MessageId)),
 
 
    ------------------------------
