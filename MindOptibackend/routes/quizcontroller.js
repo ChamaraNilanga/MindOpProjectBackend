@@ -195,7 +195,16 @@ const gradeReport=async(req,res)=>{
     });
 };
    
-   
+   // Responses report
+const responsesReport=async(req,res)=>{
+    const QuizID=req.params.qid;
+    await pool.query("select u.UserName, sa.GivenAnswer, sa.status_ from Student s , User_ u , StudentAnswer sa, QuizAttempt q where s.StudentId=u.UserId and q.QuizID=$1",[QuizID],(error,results)=>{
+       
+        if (error) throw  error;
+        res.status(200).json(results.rows);
+        
+    });
+};
 
 
 
@@ -223,4 +232,5 @@ module.exports = {
     displayAllAttempts,
     searchattempt,
     gradeReport,
+    responsesReport,
  };
