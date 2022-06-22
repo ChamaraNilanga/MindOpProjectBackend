@@ -96,13 +96,13 @@ app.use(function (req, res, next) {
 });
 
 
-// app.get('/images/:key', (req, res) => {
-//   // console.log(req.params)
-//   const key = req.params.key
-//   const readStream = getFileStream(key)
+app.get('/images/:key', (req, res) => {
+  // console.log(req.params)
+  const key = req.params.key
+  const readStream = getFileStream(key)
 
-//   readStream.pipe(res)
-// })
+  readStream.pipe(res)
+})
 
 // // app.use(express.json());
 // // app.use(bodyParser.urlencoded({extented:false}))
