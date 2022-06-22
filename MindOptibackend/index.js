@@ -12,11 +12,25 @@ const forumroutes=require("./models/forum");
 const userroutes = require("./models/user");
 const assignmentroutes = require("./models/assignment");
 
+const fs = require('fs')
+const util = require('util')
+
+
+const multer = require('multer')
+const upload = multer({ dest: 'uploads/' })
+
+const { getFileStream } = require('./s3')
 app.get("/",(req,res) =>{
     res.send("hello");
     console.log("server");
 });
+app.get('/images/:key', (req, res) => {
+  // console.log(req.params)
+  const key = req.params.key
+  const readStream = getFileStream(key)
 
+  readStream.pipe(res)
+})
 
 // app.use(express.json());
 // app.use(bodyParser.urlencoded({extented:false}))

@@ -14,7 +14,7 @@ app.use((req,res,next)=>{
     next();
 });
 
-router.get("/image:key",controller.getImage);
+router.get("/image/:key",controller.getImage);
 router.post("/category",controller.addcategory);
 router.post("/comment/:uid&:qid",controller1.createforumcomment);
 router.post("/question/:catid&:uid",upload.single('image'),controller.createforumquestion);

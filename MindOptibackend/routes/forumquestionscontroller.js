@@ -126,12 +126,11 @@ const searchforumques = async(req,res) => {
 };
 //get image
 const getImage=async(req, res) => {
-    console.log(req.params)
-    console.log("werd")
     const key = req.params.key
-    const readStream = await getFileStream(key)
-
-    readStream.pipe(res)
+    await pool.query("SELECT image FROM forum_question WHERE fquestionid=$1",[key],(error,results)=>{
+        if (error) throw  error;
+        res.status(200).json(results.rows);
+    });
   }
   
 
