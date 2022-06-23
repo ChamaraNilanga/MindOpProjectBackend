@@ -210,14 +210,20 @@ const responsesReport=async(req,res)=>{
 //Display Questions belongs to a Quiz
 const displayQuestionsinaQuiz = async(req,res) => {
     const QuizID=req.params.quizid;
-    
+    // console.log('Hi...');
     await pool.query("select qhq.QuizID, qhq.QID, q.QuestionText, q.mark ,q.Answer01,q.Answer02,q.Answer03,q.Answer04 from QuizQuestion q , QuizHasQuizQuestion qhq where qhq.QID = q.QID and qhq.QuizID=$1",[QuizID],(error,results)=>{
         if (error) throw  error;
         res.status(200).json(results.rows);
     });
 };
 
-
+//Display correct answers
+const displayCorrectAnswers = async(req,res) => {
+    await pool.query("SELECT * FROM CorrectAnswer",(error,results)=>{
+        if (error) throw  error;
+        res.status(200).json(results.rows);
+    });
+};
 
 
 
@@ -241,4 +247,6 @@ module.exports = {
     gradeReport,
     responsesReport,
     displayQuestionsinaQuiz,
+    displayCorrectAnswers,
+    
  };

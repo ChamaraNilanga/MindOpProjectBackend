@@ -30,6 +30,7 @@ router.get("/viewgradereport/:qid", controller.gradeReport);
 router.get("/viewresponsesreport/:qid", controller.responsesReport);
 
 router.get("/displayquestionsbelongstoaquiz/:quizid", controller.displayQuestionsinaQuiz);
+router.get("/displaycorrectanswers", controller.displayCorrectAnswers);
 
 
 module.exports=router;
