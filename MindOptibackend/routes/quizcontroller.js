@@ -207,11 +207,18 @@ const responsesReport=async(req,res)=>{
 };
 
 
+//Display Questions belongs to a Quiz
+const displayQuestionsinaQuiz = async(req,res) => {
+    const QuizID=req.params.quizid;
+    
+    await pool.query("select qhq.QuizID, qhq.QID, q.QuestionText, q.mark from QuizQuestion q , QuizHasQuizQuestion qhq where qhq.QID = q.QID and qhq.QuizID=$1",[QuizID],(error,results)=>{
+        if (error) throw  error;
+        res.status(200).json(results.rows);
+    });
+};
 
 
 
-//Checking Student answers
-//generate reports
 
 
 
@@ -233,4 +240,5 @@ module.exports = {
     searchattempt,
     gradeReport,
     responsesReport,
+    displayQuestionsinaQuiz,
  };

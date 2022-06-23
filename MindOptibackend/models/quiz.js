@@ -29,6 +29,8 @@ router.get("/displaystudentanswersforaquestion/:qid", controller.displayStudentA
 router.get("/viewgradereport/:qid", controller.gradeReport);
 router.get("/viewresponsesreport/:qid", controller.responsesReport);
 
+router.get("/displayquestionsbelongstoaquiz/:quizid", controller.displayQuestionsinaQuiz);
+
 
 module.exports=router;
 
