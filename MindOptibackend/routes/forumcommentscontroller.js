@@ -16,7 +16,7 @@ const createforumcomment=async(req,res)=>{
 //get forum comments
 const getcommentslist=async(req,res)=>{
     const cid=req.params.cid;
-    await pool.query("SELECT fcommentid,body,postedtime,fquestionid,commenterid FROM forum_comment WHERE fquestionid=$1",[cid],(error,results)=>{
+    await pool.query("SELECT f.fcommentid,f.body,f.postedtime,f.fquestionid,f.commenterid,u.username FROM forum_comment f,user_ u WHERE fquestionid=$1 AND u.userid=f.commenterid",[cid],(error,results)=>{
         if(error) throw error;
         res.status(200).json(results.rows);
     });
@@ -32,7 +32,7 @@ const deletecomments=async(req,res)=>{
                 res.status(200).send("comment deleted");
             });
         }else{
-            res.status(400).send("No comment to delete");
+            res.status(200).send("No comment to delete");
         }
     });
 };
@@ -50,7 +50,7 @@ const createforumsubcomment=async(req,res)=>{
 //get forum subcomments
 const getsubcommentslist=async(req,res)=>{
     const cid=req.params.cid;
-    await pool.query("SELECT fsubcommentid,body,postedtime,fcommentid,subcomid FROM forum_sub_comment WHERE fcommentid=$1",[cid],(error,results)=>{
+    await pool.query("SELECT s.fsubcommentid,s.body,s.postedtime,s.fcommentid,s.subcomid,u.username FROM forum_sub_comment s,user_ u WHERE u.userid=s.subcomid AND fcommentid=$1",[cid],(error,results)=>{
         if(error) throw error;
         res.status(200).json(results.rows);
     });
@@ -66,7 +66,7 @@ const deletesubcomments=async(req,res)=>{
                 res.status(200).send("subcomment deleted");
             });
         }else{
-            res.status(400).send("No subcomment to delete");
+            res.status(200).send("No subcomment to delete");
         }
     });
 };

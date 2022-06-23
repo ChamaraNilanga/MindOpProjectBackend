@@ -14,7 +14,9 @@ app.use((req,res,next)=>{
 
 router.post("/:sid&:rid", controller.sendMessage);
 router.delete("/:cid",controller.deleteMessage);
-router.get("/:sid&:rid",controller.getMessage);
+router.get("/chat/:sid&:rid",controller.getMessage);
+router.get("/chat/:rid",controller.getMessageByReceiverId);
+router.post("/:sid",controller.sendReply);
 
 
 module.exports=router;

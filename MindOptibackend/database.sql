@@ -91,28 +91,27 @@ CREATE DARABASE LMS;
    foreign key(UserID) references Teacher(TeacherID));
 
    ------------------------------
-   create table Blog
+  create table Blog
    (
    BlogID SERIAL,
    BlogTitle varchar(50),
    Body text,
    UserID varchar(10),
-   ManageTime time,
+   ManageTime timestamp,
    primary key(BlogID),
    foreign key(UserID) references User_(UserID));
 
    --------------------------------
-   create table Blog_comment
+create table Blog_comment
    (
    BcommentID SERIAL,
    CommentBody text,
    BlogID  SERIAL,
-   BloggerID varchar(10),
-   PostedTime time,
+   CommenterID varchar(10),
+   PostedTime TIMESTAMP,
    primary key(BcommentID),
    foreign key(BlogID) references Blog(BlogID),
-   foreign key(BloggerID) references Student(StudentID));
-
+   foreign key(CommenterID) references Student(StudentID) ON DELETE CASCADE) 
    ---------------------------------
    create table Forum_category
    (
@@ -124,7 +123,7 @@ CREATE DARABASE LMS;
    create table Forum_question
    (
    FQuestionID SERIAL,
-   name_  varchar(500),
+   name_  text,
    FCategoryID  SERIAL,
    ManageTime time,
    UserID  varchar(10),
@@ -172,6 +171,7 @@ CREATE DARABASE LMS;
    CreatedTime timestamp,
    ModCode varchar(10),
    isconducting boolean,
+   price decimal,
    primary key(ModID),
    foreign key(TeacherID) references Teacher(TeacherID) ,
    foreign key(AdminID) references Admin_(AdminID));
@@ -196,6 +196,7 @@ CREATE DARABASE LMS;
    
      create table chat
    (
+   chatid SERIAL,
    Senderid varchar(10),
    Receiverid varchar(10),
    ChatTime  timestamp,
@@ -204,6 +205,26 @@ CREATE DARABASE LMS;
    foreign key(MessageId) references Message_(MessageId)
   );
    --------------------------------------
+
+
+
+   
+   --------------------------------------
+
+
+   create table Message_
+   (
+   MessageId SERIAL,
+   MessageBody varchar(500),
+    sender varchar(10),
+   primary key(MessageId)),
+   MessageBody varchar(500),
+   primary key(chatid),
+   foreign key(Senderid) references Student(StudentID)),
+   foreign key(Receiverid) references Teacher(TeacherID),
+  
+  )
+
 
 
    ------------------------------
