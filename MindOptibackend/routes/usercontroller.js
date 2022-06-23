@@ -1,8 +1,17 @@
+const express = require("express");
+const router = express.Router();
 const pool = require("../db");
+const bcrypt = require("bcrypt");
+const { password } = require("pg/lib/defaults");
+const jwtGenerator = require("../utils/jwtGenerator");
+const authorize = require("../middleware/authorize");
+const validInfo = require("../middleware/validInfo");
+
+
 
 //get all users
 const getusers = async(req,res) => {
-    await pool.query("SELECT UserId,UserName FROM User_",(error,results)=>{
+    await pool.query("SELECT UserId,UserName,Pass_word FROM User_",(error,results)=>{
         if (error) throw  error;
         res.status(200).json(results.rows);
     });
@@ -14,6 +23,20 @@ const userpro  = async(req,res) => {
      await pool.query("SELECT * FROM User_ WHERE UserId=$1",[key],(error,results)=>{
         if (error) throw  error;
         res.status(200).json(results.rows);
+    });
+};
+
+//get email confirmation
+const emailconfirm  = async(req,res) => {
+    const key= req.params.key;
+     await pool.query("SELECT * FROM User_ WHERE Email=$1",[key],(error,results)=>{
+        if (results.rows.length){
+            // res.send("Email valid");
+            res.status(200).send("Email valid");
+        }else{
+            //res.send("Email not valid");
+            res.status(200).send("Email is not valid");
+        }
     });
 };
 
@@ -29,16 +52,18 @@ const userpro  = async(req,res) => {
 
 //add a user
  const adduser = async(req,res) => {
+    console.log('log')
      const {uid,usernam,gen,dob,email,psswd,homeno,laneno,city,contactno,admin,tcher,stdnt} =req.body;
      //check already added
+     const salt = await bcrypt.genSalt(10);
+        const bcryptPassword = await bcrypt.hash(psswd,salt);
      await pool.query("SELECT UserName FROM User_ WHERE UserId=$1 OR Email=$2",[uid,email],(error,results)=>{
         if (results.rows.length){
             res.send("Already added");
         }else{
-        pool.query("INSERT INTO User_ (UserId,UserName,Gender,DOB,Email,Pass_word,Home_no,Lane,City,ContactNo,Teacher,Admin_,Student) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)",[uid,usernam,gen,dob,email,psswd,homeno,laneno,city,contactno,admin,tcher,stdnt],(error,results)=>{
-            if (error) throw  error;
+        pool.query("INSERT INTO User_ (UserId,UserName,Gender,DOB,Email,Pass_word,Home_no,Lane,City,ContactNo,Teacher,Admin_,Student) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)",[uid,usernam,gen,dob,email,bcryptPassword,homeno,laneno,city,contactno,tcher,admin,stdnt],(error,results)=>{
+            if (error)throw error;
             res.status(200).send("user added");
-        
         });
       }
     });
@@ -81,26 +106,30 @@ const userpro  = async(req,res) => {
     });
 
  };
- // login
- const login = async(req,res) => {
-    const {uid,psswd} =req.body;
-    // error if no such user
-    await pool.query("SELECT UserName FROM User_ WHERE UserId=$1 OR Email=$1",[uid],(error,results)=>{
-       if (results.rows.length){
-         pool.query("SELECT Pass_word FROM User_ WHERE UserId=$1 OR Email=$1",[uid],(error,results)=>{
-            if (psswd==results.rows){
-                res.status(205).send("Login success");
-            }else{
-                res.status(205).send("Password is Incorrect.");
-            }
-        });
-       }else{res.status(205).send("Email is Incorrect.");}
-   });
 
-};
-
-
-
+const login = async(req,res) => {
+    const {uid,psswd,email} =req.body;  
+    try {
+      const user = await pool.query("SELECT * FROM User_ WHERE UserId=$1 OR Email=$2", [uid,email]);
+  
+      if (user.rows.length === 0) {
+        return res.status(200).json("Invalid Credential");
+      }
+      
+      const validPassword = await bcrypt.compare(psswd,user.rows[0].pass_word);
+      if (!validPassword) {
+        return res.status(200).json("Invalid Credential");
+      }
+      
+      {
+        const jwtToken = jwtGenerator(user.rows[0].UserId,user.rows[0].teacher,user.rows[0].student,user.rows[0].admin_);
+    return res.json({ jwtTokens:jwtToken,teacher:user.rows[0].teacher,student:user.rows[0].student,admin:user.rows[0].admin_,userid:user.rows[0].userid});
+      }
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send(err.message);
+    }
+  };
 
 
 module.exports = {
@@ -110,7 +139,7 @@ module.exports = {
     adduser,
     deleteUser,
     updateuser,
-    login
+    login,
+    emailconfirm
 
-    
 };

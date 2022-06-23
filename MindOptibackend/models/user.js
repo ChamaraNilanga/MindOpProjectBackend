@@ -16,5 +16,5 @@ router.get("/userprofile/:key",controller.userpro);
 router.get("/searcheduser/:key",controller.searcheduser);
 router.put("/updateuser/:id",controller.updateuser);
 router.post("/login", controller.login);
-
+router.get("/emailconfirm/:key", controller.emailconfirm);
 module.exports=router; 

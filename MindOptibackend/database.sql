@@ -19,7 +19,7 @@ CREATE DARABASE LMS;
    Admin_  bit,
    Student  bit,
    primary key(UserId));
-   ----------------------
+   
    create table Student
    (
    StudentId varchar(10),
@@ -28,14 +28,14 @@ CREATE DARABASE LMS;
    primary key(StudentId),
    foreign key(StudentId) references User_(UserID));
 
-   ------------------------
+  
     create table Notification_
    (
    NotificationID SERIAL,
    NotificationBody varchar(500),
    primary key(NotificationID));
 
-   ---------------------------
+  
    create table NotificationReceived
    (
    NotificationID SERIAL,
@@ -45,7 +45,7 @@ CREATE DARABASE LMS;
    foreign key(StudentId) references Student(StudentId),
    foreign key(NotificationID) references Notification_(NotificationID));
 
-   -----------------------------
+   
    create table Teacher
    (
    TeacherID varchar(10),
@@ -55,7 +55,7 @@ CREATE DARABASE LMS;
    primary key(TeacherID),
    foreign key(TeacherID) references User_(UserID));
 
-   -----------------------------
+  
    create table Admin_
    (
    AdminID varchar(10),
@@ -63,7 +63,7 @@ CREATE DARABASE LMS;
    primary key(AdminID),
    foreign key(AdminID) references User_(UserID));
 
-   ------------------------------
+  
    create table Wishlist
    (
    WishListid SERIAL,
@@ -77,7 +77,7 @@ CREATE DARABASE LMS;
    (
    RecordID varchar(10),
    UserID varchar(10),
-   LoginTime datetime,
+   LoginTime time,
    primary key(RecordID),
    foreign key(UserID) references User_(UserID));
 
@@ -126,7 +126,7 @@ CREATE DARABASE LMS;
    FQuestionID SERIAL,
    name_  varchar(500),
    FCategoryID  SERIAL,
-   ManageTime datetime,
+   ManageTime time,
    UserID  varchar(10),
    PinStatus Boolean,
    LockStatus Boolean,
@@ -186,6 +186,14 @@ CREATE DARABASE LMS;
    foreign key(ModuleID) references Module(ModID));
 
    --------------------------------------
+   
+   create table Message_
+   (
+   MessageId SERIAL,
+   MessageBody varchar(500),
+   sender varchar(10),
+   primary key(MessageId));
+   
      create table chat
    (
    Senderid varchar(10),
@@ -194,16 +202,8 @@ CREATE DARABASE LMS;
    MessageId  SERIAL,
    primary key(Senderid,Receiverid,MessageId),
    foreign key(MessageId) references Message_(MessageId)
-  )
+  );
    --------------------------------------
-
-
-   create table Message_
-   (
-   MessageId SERIAL,
-   MessageBody varchar(500),
-   sender varchar(10),
-   primary key(MessageId)),
 
 
    ------------------------------
@@ -218,6 +218,7 @@ CREATE DARABASE LMS;
    RequestedTime timestamp,
    Progress float,
    isaccepted boolean,
+       TeacherID varchar(10),
    primary key(requestedID),
    foreign key(TeacherID) references Teacher(TeacherID),
    foreign key(ModuleID) references Module(ModID),
@@ -233,7 +234,7 @@ CREATE DARABASE LMS;
 							  acceptstatus boolean,
 							  PRIMARY KEY(tid,modid),
 							  foreign key(tid) references Teacher(TeacherID),
-							 foreign key(acceptby) references Admin_(adminid),
+							 foreign key(acceptby) references Admin_(AdminID),
 		 foreign key(modid) references Module(ModID));
 
    ---------------------------------------
@@ -275,6 +276,7 @@ CREATE DARABASE LMS;
    StudentID varchar(10),
    AttemptTime  timestamp,
    Grade varchar(10),
+   submission text,
    primary key(AssignmentID,StudentID),
    foreign key(AssignmentID) references Assignment(AssignmentID),
    foreign key(StudentID) references Student(StudentID));
