@@ -133,6 +133,25 @@ const getImage=async(req, res) => {
     });
   }
   
+  //pi question
+  const pinquestion=async(req,res)=>{
+    const id=req.params.fid;
+    await pool.query("UPDATE forum_question SET pinstatus=true WHERE fquestionid=$1",[id],(error,results)=>{
+        if(error) throw error;
+        res.status(200).send("Pinned");
+    });
+};
+
+const getpinnedquestions=async(req,res)=>{
+    const catid=req.params.cid;
+    await pool.query("SELECT fquestionid,name_,managetime,userid,image FROM forum_question WHERE fcategoryid=$1 AND pinstatus=true",[catid],(error,results)=>{
+        if(results.rows.length){
+            res.status(200).json(results.rows);
+        }else{
+            res.status(400).send("No any question related to this category");
+        }
+    });
+};
 
 
 module.exports = {
@@ -145,4 +164,6 @@ module.exports = {
     searchforumques,
     getmylist,
     getImage,
+    pinquestion,
+    getpinnedquestions
 };

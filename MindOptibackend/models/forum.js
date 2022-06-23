@@ -29,6 +29,8 @@ router.delete("/category/:id",controller.deletecategory);
 router.delete("/question/:id",controller.deletequestion);
 router.delete("/comment/:id",controller1.deletecomments);
 router.delete("/subcomment/:id",controller1.deletesubcomments);
+router.put("/pinquestion/:fid",controller.pinquestion);
+router.get("/pinquestion/:cid",controller.getpinnedquestions);
 
 
 //elasticgreenstore/neflyfy
