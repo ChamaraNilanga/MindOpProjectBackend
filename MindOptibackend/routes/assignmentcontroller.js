@@ -1,5 +1,10 @@
 const pool = require("../db");
-
+const {uploadFile,getFileStream } = require("../s3");
+const multer = require('multer');
+const upload =multer({dest:"uploads/"});
+const fs = require('fs')
+const util = require('util')
+const unlinkFile = util.promisify(fs.unlink)
 //get assignment
 const getassignment = async(req,res) => {
     await pool.query("SELECT * FROM Assignment",(error,results)=>{
@@ -19,16 +24,46 @@ const getoneassignment = async(req,res) => {
 };
 
 
-//add assignment
-        const addassignment = async(req,res) => {
-            const {assignmentnam,duedat,intro,contid,timelimit} =req.body;
+// //add assignment
+//         const addassignment = async(req,res) => {
+//             const {assignmentnam,duedat,intro,contid,timelimit} =req.body;
             
-            await pool.query("INSERT INTO Assignment(name_,Introduction,ContentID,DueDate,timelimit,CreateTime) values ($1,$2,$3,$4,$5,CURRENT_TIMESTAMP)",[assignmentnam,intro,contid,duedat,timelimit],(error,results)=>{
-                   if (error) throw  error;
-                   res.status(200).send("Assignment created");
-           });
+//             await pool.query("INSERT INTO Assignment(name_,Introduction,ContentID,DueDate,timelimit,CreateTime) values ($1,$2,$3,$4,$5,CURRENT_TIMESTAMP)",[assignmentnam,intro,contid,duedat,timelimit],(error,results)=>{
+//                    if (error) throw  error;
+//                    res.status(200).send("Assignment created");
+//            });
        
+//         };
+////////////////
+        const addassignment=async(req,res)=>{
+            const {assignmentnam,duedat,intro,contid,timelimit} =req.body;
+            const file=req.file;
+            //console.log(file);
+            if(file){
+            const results=await uploadFile(file);//s3.js function used in here
+            //console.log(results);
+            //res.send("success");
+            if(results){
+                const image=results.key;
+                await unlinkFile(file.path);
+                pool.query("INSERT INTO Assignment(name_,Introduction,ContentID,DueDate,timelimit,submission,CreateTime) values ($1,$2,$3,$4,$5,$6,CURRENT_TIMESTAMP)",[assignmentnam,intro,contid,duedat,timelimit,image],(error,results)=>{
+                    if(error) throw error;
+                    res.status(200).send("Assignment created");
+                });
+            }else{
+                res.status(200).send("unable to create assignment");
+            }
+            }else{
+                pool.query("INSERT INTO Assignment(name_,Introduction,ContentID,DueDate,timelimit,CreateTime) values ($1,$2,$3,$4,$5,CURRENT_TIMESTAMP)",[assignmentnam,intro,contid,duedat,timelimit],(error,results)=>{
+                    if(error) throw error;
+                    res.status(200).send("added Assignment");
+                
+                });
+            }
+            
         };
+
+
 
 //delete Assignment
  const deleteAssignmnet= async(req,res) => {
