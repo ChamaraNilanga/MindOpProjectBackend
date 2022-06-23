@@ -119,20 +119,20 @@ const studentenrollrequest = async (req,res)=>{
                             });
                     }else{
                         if (error) throw error;
-                        res.status(401).send("Not founded the Course");
+                        res.status(201).send("Not founded the Course");
                     }
     
                     });
                 }else{
                     if (error) throw error;
-                    res.status(401).send("You are not a student");
+                    res.status(201).send("You are not a student");
                 }
             
             });
 
         }else{
             if (error) throw error;
-            res.status(401).send("Already Requested");
+            res.status(201).send("Already Requested");
         }
         
 
@@ -153,7 +153,7 @@ const acceptstudentrequest = async (req,res) => {
                
             });
         }else{
-            res.status(400).send("Cannot find request");
+            res.status(200).send("Cannot find request");
         }
     });
 };
@@ -164,7 +164,7 @@ const removestudent = async (req,res) => {
     const modid= req.params.modid;
     await pool.query("SELECT requestedid FROM enrollmentrequest WHERE moduleid=$1 AND studentid=$2 AND isaccepted=true",[modid,sid],(error,results)=>{
         if(!results.rows.length){
-            res.status(400).send("Not accepted or No any record");
+            res.status(200).send("Not accepted or No any record");
         }else{
             pool.query("DELETE FROM enrollmentrequest WHERE moduleid=$1 AND studentid=$2",[modid,sid],(error,results)=>{
                 if (error) throw error;
@@ -207,14 +207,14 @@ const assignteachertomodule = async(req,res) => {
                     });
                     
                 }else{
-                    res.status(400).send("Allready conducting by teacher");
+                    res.status(200).send("Allready conducting by teacher");
                 }
             })
             
         }else
            
         {
-            res.status(400).send("Cannot find teacher");
+            res.status(200).send("Cannot find teacher");
         }
     });
 

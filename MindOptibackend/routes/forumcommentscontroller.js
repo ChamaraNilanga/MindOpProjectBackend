@@ -32,7 +32,7 @@ const deletecomments=async(req,res)=>{
                 res.status(200).send("comment deleted");
             });
         }else{
-            res.status(400).send("No comment to delete");
+            res.status(200).send("No comment to delete");
         }
     });
 };
@@ -66,7 +66,7 @@ const deletesubcomments=async(req,res)=>{
                 res.status(200).send("subcomment deleted");
             });
         }else{
-            res.status(400).send("No subcomment to delete");
+            res.status(200).send("No subcomment to delete");
         }
     });
 };
