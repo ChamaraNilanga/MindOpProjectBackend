@@ -39,7 +39,7 @@ const deletecategory=async(req,res)=>{
                 res.status(200).send("Category deleted");
             });
         }else{
-            res.status(400).send("No category to delete");
+            res.status(200).send("No category to delete");
         }
     });
 };
@@ -64,7 +64,7 @@ const createforumquestion=async(req,res)=>{
         
         });
     }else{
-        res.status(400).send("unable to added question");
+        res.status(200).send("unable to added question");
     }
     }else{
         pool.query("INSERT INTO forum_question (name_,fcategoryid,managetime,userid) VALUES ($1,$2,CURRENT_TIMESTAMP,$3)",[question,catid,uid],(error,results)=>{
@@ -83,7 +83,7 @@ const getquestionlist=async(req,res)=>{
         if(results.rows.length){
             res.status(200).json(results.rows);
         }else{
-            res.status(400).send("No any question related to this category");
+            res.status(200).send("No any question related to this category");
         }
     });
 };
@@ -98,7 +98,7 @@ const deletequestion=async(req,res)=>{
                 res.status(200).send("question deleted");
             });
         }else{
-            res.status(400).send("No question to delete");
+            res.status(200).send("No question to delete");
         }
     });
 };
@@ -109,7 +109,7 @@ const getmylist=async(req,res)=>{
         if(results.rows.length){
             res.status(200).json(results.rows);
         }else{
-            res.status(400).send("No any question related to this user");
+            res.status(200).send("No any question related to this user");
         }
     });
 };
@@ -133,6 +133,25 @@ const getImage=async(req, res) => {
     });
   }
   
+  //pi question
+  const pinquestion=async(req,res)=>{
+    const id=req.params.fid;
+    await pool.query("UPDATE forum_question SET pinstatus=true WHERE fquestionid=$1",[id],(error,results)=>{
+        if(error) throw error;
+        res.status(200).send("Pinned");
+    });
+};
+
+const getpinnedquestions=async(req,res)=>{
+    const catid=req.params.cid;
+    await pool.query("SELECT fquestionid,name_,managetime,userid,image FROM forum_question WHERE fcategoryid=$1 AND pinstatus=true",[catid],(error,results)=>{
+        if(results.rows.length){
+            res.status(200).json(results.rows);
+        }else{
+            res.status(200).send("No any question related to this category");
+        }
+    });
+};
 
 
 module.exports = {
@@ -145,4 +164,6 @@ module.exports = {
     searchforumques,
     getmylist,
     getImage,
+    pinquestion,
+    getpinnedquestions
 };

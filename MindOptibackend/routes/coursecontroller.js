@@ -32,7 +32,7 @@ const getsinglecourses = async(req,res) => {
      //check already added
      await pool.query("SELECT ModName FROM Module WHERE ModName=$1 OR ModCode=$2",[modname,modcode],(error,results)=>{
         if (results.rows.length){
-            res.send("Already added");
+            res.status(200).send("Already added");
         }else{
         pool.query("INSERT INTO Module (ModName,Descrip,sdate,enddate,adminid,modcode,price) values ($1,$2,$3,$4,$5,$6,$7)",[modname,descrip,star,end,adminid,modcode,price],(error,results)=>{
             if (error) throw  error;
@@ -109,7 +109,7 @@ const getsinglecourses = async(req,res) => {
      const {progress}=req.body;
      await pool.query("SELECT requestedid FROM enrollmentrequest WHERE moduleid=$1 AND studentid=$2 AND isaccepted=true",[modid,sid],(error,results)=>{
          if(!results.rows.length){
-            res.status(400).send("Not accepted or No any record");
+            res.status(200).send("Not accepted or No any record");
          }else{
             pool.query("UPDATE enrollmentrequest SET progress=$1 WHERE moduleid=$2 AND studentid=$3",[progress,modid,sid],(error,results)=>{
                 if (error) throw error;
@@ -129,7 +129,7 @@ const getsinglecourses = async(req,res) => {
                  res.status(200).json(results.rows);
              });
          }else{
-            res.status(400).send("Module cannot find");
+            res.status(200).send("Module cannot find");
          }
      });
 
@@ -152,7 +152,7 @@ const conductorenrollcourse = async(req,res) => {
                         res.status(200).json(results.rows);
                     });
                 }else{
-                    res.status(400).send("No user enrolled or conducting courses");
+                    res.status(200).send("No user enrolled or conducting courses");
                 }
             });
         
