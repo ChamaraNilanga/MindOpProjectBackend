@@ -15,6 +15,6 @@ router.delete("/:id",controller.deleteUser);
 router.get("/userprofile/:key",controller.userpro);
 router.get("/searcheduser/:key",controller.searcheduser);
 router.put("/updateuser/:id",controller.updateuser);
-
-
-module.exports=router;
+router.post("/login", controller.login);
+router.get("/emailconfirm/:key", controller.emailconfirm);
+module.exports=router; 

@@ -13,8 +13,9 @@ router.get("/", controller.getassignment);
 router.post("/", controller.addassignment);
 router.delete("/:id",controller.deleteAssignmnet);
 router.put("/updateassignment/:id",controller.updateassignment);
+router.get("/getassignment/:id", controller.getoneassignment);
+router.get("/attemptassignment/:id", controller.attemptassignment);
+router.post("/attemptassignment02", controller.attemptassignment02);
 
-
-    
 
 module.exports=router;

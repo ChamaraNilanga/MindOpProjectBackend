@@ -65,6 +65,7 @@ app.get("/",(req,res) =>{
 
 
 
+
 app.use(cors()) 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -121,6 +122,7 @@ app.get('/images/:key', (req, res) => {
 // })
 
 
+
 app.use("/coursedetails",courseroutes);
 app.use("/message",chatroutes);
 app.use("/blog",blogroutes);
@@ -138,7 +140,8 @@ const PORT =process.env.PORT || 3000
 
 
 app.listen(8070, () => {
-    console.log(`Server is running on port 8052`)
+  console.log(`Server is running on port 8052`)
+
 }
 )
 
