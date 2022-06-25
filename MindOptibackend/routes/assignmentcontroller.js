@@ -5,6 +5,18 @@ const upload =multer({dest:"uploads/"});
 const fs = require('fs')
 const util = require('util')
 const unlinkFile = util.promisify(fs.unlink)
+
+
+//submissions
+const submissions = async(req,res) => {
+    const id=req.params.id;
+    await pool.query("SELECT StudentID,AttemptTime FROM AssignmentAttempt where AssignmentID=$1",[id],(error,results)=>{
+        if (error) throw  error;
+        res.status(200).json(results.rows);
+    });
+};
+
+
 //get assignment
 const getassignment = async(req,res) => {
     await pool.query("SELECT * FROM Assignment",(error,results)=>{
@@ -147,5 +159,6 @@ module.exports = {
     updateassignment,
     getoneassignment,
     attemptassignment,
-    attemptassignment02
+    attemptassignment02,
+    submissions
 };

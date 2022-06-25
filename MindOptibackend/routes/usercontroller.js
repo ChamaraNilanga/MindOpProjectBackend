@@ -52,7 +52,6 @@ const emailconfirm  = async(req,res) => {
 
 //add a user
  const adduser = async(req,res) => {
-    console.log('log')
      const {uid,usernam,gen,dob,email,psswd,homeno,laneno,city,contactno,admin,tcher,stdnt} =req.body;
      //check already added
      const salt = await bcrypt.genSalt(10);
