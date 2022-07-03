@@ -152,7 +152,8 @@ const conductorenrollcourse = async(req,res) => {
                         res.status(200).json(results.rows);
                     });
                 }else{
-                    res.status(200).send("No user enrolled or conducting courses");
+                    // res.status(200).send("No user enrolled or conducting courses");
+                    res.status(200).json(results.rows);
                 }
             });
         
